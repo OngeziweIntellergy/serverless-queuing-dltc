@@ -1,21 +1,22 @@
 .container{
 width:99dvw;
 height: 100dvh; 
-border:2px solid yellow;
 display:flex;
 flex-direction: column;
-justify-content: center;
+justify-content: center; 
+
+
 
 }
-.container > .top{width:99%; height: 90%;border:2px solid blue; display: flex;}
-.container > .bottom{width:99%; height: 8%;border: 2px solid lime ;}
+.container > .top{width:99%; height: 90%;border:2px solid black; display: flex;}
+.container > .bottom{width:99%; height: 8%;border: 2px solid black ;}
 
-.container-left{border:2px solid red; width: 49%;display: flex; flex-direction: column;}
-.container-qr{width: 99%;height: 80%;border:2px solid blue}
+.container-left{width: 49%;display: flex; flex-direction: column;}
+.container-qr{width: 50%;height: 80%;}
 .container-qr > img{height: 100%; width: 100%;}
 
-.container-right{border:2px solid red; width: 49%; display: flex;flex-direction: column;}
-.logo-area{height: 10%;border: 2px solid purple}
+.container-right{border:2px solid rgb(75, 75, 208); width: 60%; display: flex;flex-direction: column;}
+.logo-area{height: 10%;border: 2px solid black}
 .logo-area > img{width: 60px;height: 60px;}
 table, th, td {
     border: 1px solid black;
@@ -23,4 +24,6 @@ table, th, td {
     width: 100%;
     text-align: center;
     align-items: center;
-  }
+  } 
+
+  

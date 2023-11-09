@@ -17,7 +17,7 @@ function Display() {
         
             <div className='container-right'>
                 <div className='logo-area'>
-                    <img src={require('./../../assets/img/qrcode.png')} />
+                <img src="https://dltccoffeeimages.s3.amazonaws.com/Gauteng+transport.jpeg"></img>
                 </div>
                 <div className="q-area">
                     <table>
@@ -38,7 +38,7 @@ function Display() {
             </div>
         </div>
         <div className="bottom">
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing.</p>
+            <p>Please be patient while we're working on serving you. </p>
 
         </div>
         
