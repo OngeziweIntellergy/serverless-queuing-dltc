@@ -40,6 +40,7 @@ function Login() {
 
   return (
     <div className="login-container">
+      {/* <img src="https://dltccoffeeimages.s3.amazonaws.com/Gauteng+transport.jpeg"></img> */}
       <div className="login-box">
         <h2 className="login-title">Register here</h2>
         <form className="login-form" onSubmit={handleSubmit}>
@@ -79,7 +80,8 @@ function Login() {
           <div className="input-group">
           <label htmlFor="dropdown">Reason for visit</label>
           <select id="options" name="options">
-          <option value="License">Licence Renewal</option>
+          <option value="License">ERDp</option>
+          <option value="Disk">Operator Licence</option>
           <option value="Disk">Disk Renewal</option>
          
         </select>

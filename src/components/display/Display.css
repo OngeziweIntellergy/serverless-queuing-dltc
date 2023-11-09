@@ -1,29 +1,126 @@
-.container{
-width:99dvw;
-height: 100dvh; 
-display:flex;
-flex-direction: column;
-justify-content: center; 
-
-
-
+/* Display.css */
+.container-fluid {
+  margin-top: 20px;
 }
-.container > .top{width:99%; height: 90%;border:2px solid black; display: flex;}
-.container > .bottom{width:99%; height: 8%;border: 2px solid black ;}
 
-.container-left{width: 49%;display: flex; flex-direction: column;}
-.container-qr{width: 50%;height: 80%;}
-.container-qr > img{height: 100%; width: 100%;}
+.col-lg-3 {
+  padding: 0 15px;
+}
 
-.container-right{border:2px solid rgb(75, 75, 208); width: 60%; display: flex;flex-direction: column;}
-.logo-area{height: 10%;border: 2px solid black}
-.logo-area > img{width: 60px;height: 60px;}
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    width: 100%;
-    text-align: center;
-    align-items: center;
-  } 
+.card {
+  display: flex;
+  flex-direction: column; /* Ensure card body stretches to fill space */
+}
 
-  
+.card-header {
+  font-weight: bold;
+}
+
+.card-body {
+  flex: 1; /* Stretches the card body to take the available space */
+  overflow-y: auto; /* Scroll for overflow content */
+}
+
+.serving-section {
+  margin-bottom: 20px;
+}
+
+.upcoming-section {
+  flex-grow: 1;
+  overflow-y: auto; /* Allows scrolling within the section */
+}
+
+.card-title {
+  font-size: 1rem;
+}
+
+.badge-secondary {
+  margin-right: 5px;
+}
+.ticket-number {
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.consultant-station {
+  font-size: 0.75rem;
+}
+
+/* Ensure the bottom information stays at the bottom of the card */
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body > .mt-3 {
+  margin-top: auto; /* Pushes the consultant and station info to the bottom */
+}
+/* Add more custom styling as needed */
+.ticket-number {
+  font-size: 1rem;
+}
+
+.consultant-station {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* Add custom styling for centered content */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers the content vertically */
+}
+
+/* Style for the labels/badges to be centered */
+.card-body > .badge-secondary {
+  display: inline-block; /* Allows centering with text-align */
+  margin: 4px; /* Adds spacing around badges */
+}
+
+/* Ensures that the consultant and station information is prominent */
+.consultant-station span {
+  color: #000; /* or any color you prefer for visibility */
+}
+
+/* Display.css */
+
+/* Fixed header styles */
+.fixed-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #ffffff; /* or any color/theme you prefer */
+  z-index: 1030; /* Higher than other items, but below modal overlays */
+  box-shadow: 0 2px 4px rgba(0,0,0,.1); /* Soft shadow for depth */
+  padding: 10px 0;
+}
+
+/* Add some padding at the top of the body to ensure content isn't hidden behind the fixed header */
+body {
+  padding-top: 60px; /* Height of the header plus some extra space */
+}
+
+/* Glassmorphism styles for columns */
+.glass {
+  background: rgba(255, 255, 255, 0.1); /* White background with transparency */
+  backdrop-filter: blur(10px); /* Blur effect for the background */
+  border-radius: 10px; /* Rounded corners for the card */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Slight white border */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Soft shadow for depth */
+}
+
+/* Ensure the column card extends to the height of the column */
+.col-sm {
+  height: 100%;
+}
+
+/* Adjust the KanbanColumn card to fill the height and apply glassmorphism */
+.card.h-100 {
+  height: calc(100% - 30px); /* Adjust based on your header's height */
+  margin-top: 15px; /* Half of the height adjustment to center the card */
+  margin-bottom: 15px; /* Half of the height adjustment to center the card */
+}
+
+/* ... other styles ... */
+
