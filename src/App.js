@@ -12,7 +12,6 @@ function App() {
     <main className="App">
       <Display/>
       <Reason/>
-      
       <Agent/>
       
     </main> 

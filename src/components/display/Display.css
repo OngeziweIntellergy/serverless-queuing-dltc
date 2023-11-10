@@ -1,7 +1,9 @@
 /* Display.css */
 .container-fluid {
   margin-top: 20px;
+  background-color: #f9f9f9;
 }
+.headerDisplay{background-color: #daa520;}
 
 .col-lg-3 {
   padding: 0 15px;
@@ -14,6 +16,7 @@
 
 .card-header {
   font-weight: bold;
+  background-color:  #000080;
 }
 
 .card-body {
@@ -38,7 +41,7 @@
   margin-right: 5px;
 }
 .ticket-number {
-  font-size: 0.85rem;
+  font-size: 2.85rem;
   color: #333;
 }
 
@@ -56,9 +59,7 @@
   margin-top: auto; /* Pushes the consultant and station info to the bottom */
 }
 /* Add more custom styling as needed */
-.ticket-number {
-  font-size: 1rem;
-}
+
 
 .consultant-station {
   font-size: 0.9rem;
@@ -117,10 +118,31 @@ body {
 
 /* Adjust the KanbanColumn card to fill the height and apply glassmorphism */
 .card.h-100 {
-  height: calc(100% - 30px); /* Adjust based on your header's height */
+  height: calc(90% - 30px); /* Adjust based on your header's height */
   margin-top: 15px; /* Half of the height adjustment to center the card */
   margin-bottom: 15px; /* Half of the height adjustment to center the card */
 }
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  border: none;
+}
 
-/* ... other styles ... */
+.serving-section {
+  background-color: rgba(255, 255, 255, 0.2); /* Light background for distinction */
+  border-radius: 5px;
+}
+
+.upcoming-section {
+  overflow-y: auto; /* If you have more tasks, they will be scrollable */
+}
+
+.serving-task {
+  border-left: 4px solid green; /* Visually distinct style for serving task */
+}
+
+.upcoming-task {
+  /* Optional: Style for upcoming tasks if you want them to look different */
+}
 
