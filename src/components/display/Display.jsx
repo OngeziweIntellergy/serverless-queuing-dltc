@@ -93,8 +93,4 @@ const KanbanTask = ({ task, isServing }) => {
   );
 };
 
-  
-
-
-
 export default Display;

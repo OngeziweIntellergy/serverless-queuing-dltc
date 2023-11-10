@@ -1,28 +1,31 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 import Agent from './components/agent/Agent';
 import Display from './components/display/Display';
-import React from 'react';
-import ReactDOM from 'react-dom';
 import Reason from './components/reason/Reason';
-
 
 function App() {
   return (
-    <main className="App">
-      <Display/>
-      <Reason/>
-      <Agent/>
-      
-    </main> 
+    <Router>
+      <div className="App">
+        <nav>
+          {/* Navigation Links */}
+          <Link to="/">Home</Link>
+          <Link to="/reason">Reason</Link>
+          <Link to="/agent">Agent</Link>
+        </nav>
+
+        {/* New API in react-router-dom v6: 'Routes' replaces 'Switch' */}
+        <Routes>
+          <Route path="/" element={<Display />} />
+          <Route path="/reason" element={<Reason />} />
+          <Route path="/agent" element={<Agent />} />
+          <Route path="*" element={<Display />} /> 
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
 export default App;
-
-// ReactDOM.render(
-//   <React.StrictMode>
-//     <Reason/>
-//   </React.StrictMode>,
-//   document.getElementById('root')
-// );
