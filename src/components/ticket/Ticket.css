@@ -10,10 +10,9 @@
   }
   
   .ticket-number {
-    font-size: 35px;
+    font-size: 45px;
     font-style:italic;
-    color: yellow;
-    margin-bottom: 15px;
+
   }
   
   .ticket-message {
