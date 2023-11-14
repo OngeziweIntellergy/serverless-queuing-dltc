@@ -16,6 +16,16 @@ function Reason() {
   
     return (
         <div className='container-grid'>
+            {/* Logo and Heading */}
+            <div className="header">
+                <img src="https://dltccoffeeimages.s3.amazonaws.com/gauteng_dept_of_transport.jpeg" alt="Logo" className="logo" />
+                <h1>SMART DLTC</h1>
+            </div>
+    
+            {/* Instruction Text */}
+            <p>Choose from the below options:</p>
+    
+            {/* Options Grid */}
             <div className="grid-container">
                 {options.map((option, index) => (
                 <div
@@ -28,8 +38,8 @@ function Reason() {
                 ))}
             </div>
         </div>
-      
     );
+    
   }
   export default Reason;
 
