@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import './Reason.css';
 
 function Reason() {
+    const navigate = useNavigate();
+    
+    
     const options = [
         'Professional Driving Permit',
         'Drivers License',
@@ -19,43 +23,60 @@ function Reason() {
     };
 
     const sendRequest = async (payload) => {
+        
         try {
+            // Show loading alert
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait.',
+                icon: 'info',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
             const response = await fetch('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/ticket', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    
+                    'Content-Type': 'application/json',                    
                 },
                 body: JSON.stringify({
-                    "ticket-id": "Tulani-3",
-                    "user-id": "user456",
-                    "reason": "Inquiry",
-                    "datetime": "2023-11-13T12:00:00",
-                    "user": "John Doe",
-                    "process": "Online Submission"
-                
-                }),
+                    "user-id": "12345",
+                    "reason": "Inquiry about services",
+                    "datetime": "2023-03-15T14:30:00",
+                    "user": "user@example.com",
+                    "process": "Initial"
+                  }),
             });
-
+    
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
+    
             const data = await response.json();
-            if (data.success == true) {
+    
+            if (data.success === true) {
                 Swal.fire({
                     title: 'Success!',
                     text: 'Your request has been processed.',
                     icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // history.push('/ticket'); 
-                    }
+                    showConfirmButton: false,
+                    timer: 1500 // auto close after 1500ms
                 });
+    
+                // Redirect to '/ticket' after the alert
+                navigate('/ticket');
             }
             console.log('Response:', data);
         } catch (error) {
+          
+            Swal.close();
+            Swal.fire({
+                title: 'Error!',
+                text: 'Something went wrong: ' + error,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
             console.error('Error making API request:', error);
         }
     };
@@ -63,7 +84,7 @@ function Reason() {
     const handleSelect = (option) => {
         setSelectedOption(option);
         const payload = generatePayload(option);
-        sendRequest(payload); // Send the payload to the AWS endpoint
+        sendRequest(payload); 
     };
 
     return (
