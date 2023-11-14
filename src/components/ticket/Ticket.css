@@ -1,36 +1,54 @@
-.ticket-container {
-    background-color: #007bff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    max-width: 300px;
-    margin: auto;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-  }
-  
-  .ticket-number {
-    font-size: 45px;
-    font-style:italic;
+.screen-container {
+  text-align: center;
+  padding: 20px;
+}
 
-  }
-  
-  .ticket-message {
-    font-size: 16px;
-    font-style: italic;
-    color: yellow;
-  }
+.header {
+  margin-bottom: 40px; 
+}
 
-  .progress-bar-container {
-    width: 100%; /* Full width of the container */
-    background-color: #e0e0e0; /* Light grey background */
-    border-radius: 5px; /* Rounded corners */
-    margin-top: 20px; /* Space above the progress bar */
-  }
-  
-  .progress-bar {
-    height: 20px; /* Height of the progress bar */
-    background-color: #4caf50; /* Green color for the progress bar */
-    border-radius: 5px; /* Rounded corners */
-    transition: width 0.4s ease; /* Smooth transition for width changes */
-  }
+.logo {
+  width: 100px; 
+  height: auto; 
+  margin: 0 auto; 
+}
+
+.welcome-text {
+  font-size: 50px; 
+  font-weight: bolder;
+  margin-top: 10px;
+  color: #004990; 
+}
+
+.ticket-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ticket-number-container {
+  margin-bottom: 20px; 
+}
+
+.ticket-number {
+  font-size: 32px; 
+  font-weight: bolder;
+  color: #A9A9A9; 
+  margin-bottom: 10px; 
+}
+
+.progress-bar-container {
+  width: 80%; 
+  background-color: #c0c0c0;
+  border-radius: 5px;
+  margin: auto;
+  height: 20px;
+}
+
+.progress-bar {
+  width: 50%; 
+  background-color: #9d8b57;
+  height: 100%;
+  border-radius: 5px;
+}

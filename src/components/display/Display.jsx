@@ -33,7 +33,7 @@ const Display = () => {
   return (
     <>
      <header className=" headerDisplay fixed-top text-white text-center p-3">
-        <h1>DLTC</h1>
+        <h1>SMART DLTC</h1>
       </header>
     <div className="container-fluid">
       <div className="row justify-content-center">
@@ -81,7 +81,7 @@ const KanbanTask = ({ task, isServing }) => {
     <div className={`card mb-2 ${isServing ? "serving-task" : "upcoming-task"}`}>
       <div className="card-body">
       <div className="d-flex justify-content-center align-items-center">
-          <p className="ticket-number badge badge-pill badge-success">#{task.id}</p>
+          <p className="ticket-number badge badge-pill badge-success">{task.id}</p>
       </div>
 
         <div className="consultant-station mt-2">
