@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 import './Reason.css';
 
 function Reason() {
@@ -26,7 +27,7 @@ function Reason() {
                     
                 },
                 body: JSON.stringify({
-                    "ticket-id": "2938939488459436",
+                    "ticket-id": "Tulani-3",
                     "user-id": "user456",
                     "reason": "Inquiry",
                     "datetime": "2023-11-13T12:00:00",
@@ -41,6 +42,18 @@ function Reason() {
             }
 
             const data = await response.json();
+            if (data.success == true) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Your request has been processed.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // history.push('/ticket'); 
+                    }
+                });
+            }
             console.log('Response:', data);
         } catch (error) {
             console.error('Error making API request:', error);
