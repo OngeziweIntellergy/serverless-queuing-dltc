@@ -1,7 +1,31 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import './Ticket.css'; // Importing the CSS file
 
-const Ticket = ({ ticketNumber, progress }) => { // Add a progress prop
+const Ticket = ({ progress }) => { 
+  
+  const [ticketNumber, setTicketNumber] = useState('');
+  const [reason, setReason] = useState('');
+  const [state, setState] = useState('');
+
+  useEffect(() => {
+    // Fetching ticket number from local storage
+    const storedTicketData = localStorage.getItem('requestDetails');
+   
+
+
+    console.log(storedTicketData)
+    if (storedTicketData) {
+          const ticketDetails = JSON.parse(storedTicketData);
+          console.log(ticketDetails)
+          let resdata = ticketDetails.data
+          console.log(resdata)
+          setTicketNumber(resdata.ticket_number)
+          setReason(resdata.option)
+          setState(resdata.state)
+          
+      
+    }
+  }, []);
   return (
     <div className="ticket-container">
       <div className="header">
@@ -10,7 +34,9 @@ const Ticket = ({ ticketNumber, progress }) => { // Add a progress prop
   </div>
   <div className="ticket-info">
     <div className="ticket-number-container">
-      <p className="ticket-number">Ticket Number:</p>
+      <p className="ticket-number">Ticket Number: {ticketNumber}</p>
+      <small className="ticket-number">Reason: {reason}</small><br/>
+      <small className="ticket-number">State: {state}</small>
     </div>
     <div className="progress-bar-container">
       <div className="progress-bar" style={{ width: '50%' }}></div>
