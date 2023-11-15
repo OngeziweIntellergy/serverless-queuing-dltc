@@ -23,6 +23,11 @@ function Agent() {
 
     const filteredTickets = tickets.filter(ticket => ticket.ticketNumber.toString().includes(searchQuery));
 
+    const handleSignOut = () => {
+        //This is the sign out link redirecting you back to sign in
+        window.location.href = 'https://dltc-login.auth.us-east-1.amazoncognito.com/login?client_id=546ingr1kv2p9r9mfcot8v321i&response_type=code&scope=openid&redirect_uri=https%3A%2F%2Ffrontend.d17g06z7kjqaor.amplifyapp.com%2Fagent';
+    };
+    
 
 const handleAction = (id, action) => {
     // Function to actually cancel the ticket
@@ -102,6 +107,13 @@ const handleAction = (id, action) => {
 
     return (
         <>
+
+        <div className="sign-out-container">
+            <button className="btn btn-secondary" onClick={handleSignOut}>
+                Sign Out
+            </button>
+        </div>
+
         <div>
             <input
                 type="text"
