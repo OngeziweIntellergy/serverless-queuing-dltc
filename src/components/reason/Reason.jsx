@@ -6,26 +6,26 @@ import './Reason.css';
 function Reason() {
     const navigate = useNavigate();
     
-    
     const options = [
         'Professional Driving Permit',
         'Drivers License',
         'Motor Vehicle License',
         'Operator License'
     ];
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState('');
 
     const generatePayload = (option) => {
-        // Generate a 3-digit number
         const randomNumber = Math.floor(100 + Math.random() * 900);
-        // Extract the first letter of the option and append the number
         return `${option.charAt(0)}${randomNumber}`;
     };
 
+    const storeInLocalDatabase = (data) => {
+        localStorage.setItem('requestDetails', JSON.stringify(data));
+    };
+
     const sendRequest = async (payload) => {
-        
+         
         try {
-            // Show loading alert
             Swal.fire({
                 title: 'Processing...',
                 text: 'Please wait.',
@@ -40,13 +40,7 @@ function Reason() {
                 headers: {
                     'Content-Type': 'application/json',                    
                 },
-                body: JSON.stringify({
-                    "user-id": "12345",
-                    "reason": "Inquiry about services",
-                    "datetime": "2023-03-15T14:30:00",
-                    "user": "user@example.com",
-                    "process": "Initial"
-                  }),
+                body: JSON.stringify(payload),
             });
     
             if (!response.ok) {
@@ -56,20 +50,18 @@ function Reason() {
             const data = await response.json();
     
             if (data.success === true) {
+                storeInLocalDatabase(data); // Storing data in local database
                 Swal.fire({
                     title: 'Success!',
                     text: 'Your request has been processed.',
                     icon: 'success',
                     showConfirmButton: false,
-                    timer: 1500 // auto close after 1500ms
+                    timer: 1500
                 });
-    
-                // Redirect to '/ticket' after the alert
                 navigate('/ticket');
             }
             console.log('Response:', data);
         } catch (error) {
-          
             Swal.close();
             Swal.fire({
                 title: 'Error!',
@@ -82,10 +74,20 @@ function Reason() {
     };
 
     const handleSelect = (option) => {
+ 
         setSelectedOption(option);
+       
         const payload = generatePayload(option);
-        sendRequest(payload); 
+        sendRequest({
+            "user_id": "",
+            "option":option,
+            "state": "in Queue"
+          }); 
+  
+        
     };
+    
+
 
     return (
         <div className='container-grid'>
