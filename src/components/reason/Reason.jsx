@@ -8,9 +8,9 @@ function Reason() {
     
     const options = [
         'Professional Driving Permit',
-        'Drivers License',
+        'Driver Renewal Licence',
         'Motor Vehicle License',
-        'Operator License'
+        'Operating Licence'
     ];
     const [selectedOption, setSelectedOption] = useState('');
 

@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react';
 import './Ticket.css'; // Importing the CSS file
 
-const Ticket = ({ progress }) => { 
+const Ticket = () => { 
   
   const [ticketNumber, setTicketNumber] = useState('');
   const [reason, setReason] = useState('');
@@ -10,8 +10,6 @@ const Ticket = ({ progress }) => {
   useEffect(() => {
     // Fetching ticket number from local storage
     const storedTicketData = localStorage.getItem('requestDetails');
-   
-
 
     console.log(storedTicketData)
     if (storedTicketData) {
@@ -35,12 +33,12 @@ const Ticket = ({ progress }) => {
   <div className="ticket-info">
     <div className="ticket-number-container">
       <p className="ticket-number">Ticket Number: {ticketNumber}</p>
-      <small className="ticket-number">Reason: {reason}</small><br/>
-      <small className="ticket-number">State: {state}</small>
+      <p >Reason: {reason}</p><br/>
+      <small >State: {state}</small>
     </div>
-    <div className="progress-bar-container">
+    {/* <div className="progress-bar-container">
       <div className="progress-bar" style={{ width: '50%' }}></div>
-    </div>
+    </div> */}
   </div>
     </div>
   );
