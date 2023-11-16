@@ -78,12 +78,13 @@ function Login() {
           </div>
 
           <div className="input-group">
-          <label htmlFor="dropdown">Reason for visit</label>
-          <select id="options" name="options">
-          <option value="License">ERDp</option>
-          <option value="Disk">Operator Licence</option>
-          <option value="Disk">Disk Renewal</option>
-         
+          <label htmlFor="dropdown">What will you be doing Today? </label>
+          <select id="options" name="options" >
+          <option value="Professional Driving Permit">Professional Driving Permit</option>
+          <option value="Operating Licence">Operating Licence</option>
+          <option value="Motor Vehicle License">Motor Vehicle License</option>
+          <option value="Driver Renewal Licenc">Driver Renewal Licenc</option>
+          
         </select>
           </div>
 

@@ -5,6 +5,7 @@ import Agent from './components/agent/Agent';
 import Display from './components/display/Display';
 import Reason from './components/reason/Reason';
 import Ticket from './components/ticket/Ticket';
+import Login from './components/login/Login';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Display />} />
           <Route path="/reason" element={<Reason />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/agent" element={<Agent />} />
           <Route path="/ticket" element={<Ticket />} />
           <Route path="*" element={<Display />} /> 
