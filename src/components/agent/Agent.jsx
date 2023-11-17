@@ -50,36 +50,108 @@ function Agent() {
         //This is the sign out link redirecting you back to sign in
         window.location.href = 'https://dltc-login.auth.us-east-1.amazoncognito.com/login?client_id=546ingr1kv2p9r9mfcot8v321i&response_type=code&scope=openid&redirect_uri=https%3A%2F%2Ffrontend.d17g06z7kjqaor.amplifyapp.com%2Fagent';
     };
-    const handleAction = (id, action) => {
-        let newState = '';
-        switch (action) {
-            case 'Cancel':
-                newState = 'Cancel';
-                break;
-            case 'Serve':
-                newState = 'Serving';
-                break;
-            case 'Done':
-                newState = 'Done';
-                break;
-            case 'Reinstate':
-                newState = 'in Queue';
-                break;
-            default:
-                return;
+
+    
+
+    // const handleAction = (id, action) => {
+    //     let updatedTickets = [...tickets];
+    //     let currentlyServing = updatedTickets.find(ticket => ticket.state === 'Serving');
+
+    //     if (action === 'Serve') {
+    //         if (currentlyServing) {
+    //             // If there is a ticket currently being served, move it to 'Done'
+    //             updatedTickets = updatedTickets.map(ticket => {
+    //                 if (ticket.ticket_id === currentlyServing.ticket_id) {
+    //                     return { ...ticket, state: 'Done' };
+    //                 }
+    //                 return ticket;
+    //             });
+    //         }
+    //         // Set the selected ticket to 'Serving'
+    //         updatedTickets = updatedTickets.map(ticket => {
+    //             if (ticket.ticket_id === id) {
+    //                 return { ...ticket, state: 'Serving' };
+    //             }
+    //             return ticket;
+    //         });
+    //     } else {
+    //         // Handle other actions (Cancel, Done, Reinstate)
+    //         updatedTickets = updatedTickets.map(ticket => {
+    //             if (ticket.ticket_id === id) {
+    //                 let newState = '';
+    //                 switch (action) {
+    //                     case 'Cancel':
+    //                         newState = 'Cancel';
+    //                         break;
+    //                     case 'Done':
+    //                         newState = 'Done';
+    //                         break;
+    //                     case 'Reinstate':
+    //                         newState = 'in Queue';
+    //                         break;
+    //                     default:
+    //                         newState = ticket.state; // No change in state
+    //                 }
+    //                 return { ...ticket, state: newState };
+    //             }
+    //             return ticket;
+    //         });
+    //     }
+
+    //     setTickets(updatedTickets);
+    // };
+
+    const handleAction = async (id, action) => {
+        let updatedTickets = [...tickets];
+
+        if (action === 'Cancel') {
+            const ticketToCancel = updatedTickets.find(ticket => ticket.ticket_id === id);
+            if (ticketToCancel && ticketToCancel.state === 'Serving') {
+                const result = await Swal.fire({
+                    title: 'Cancel Ticket',
+                    text: 'Select a reason for not attending the customer:',
+                    input: 'select',
+                    inputOptions: {
+                        'no-show': 'Customer No-Show',
+                        'closed': 'Service Closed',
+                        'other': 'Other'
+                    },
+                    inputPlaceholder: 'Select a reason',
+                    showCancelButton: true
+                });
+
+                if (!result.isConfirmed) {
+                    return; // Exit the function if cancelled
+                }
+                // If confirmed, proceed to update the ticket state to 'Cancel'
+            }
         }
 
-        // Update the ticket state locally
-        let updatedTickets = tickets.map(ticket => {
-            if (ticket.ticket_id === id) {
-                return { ...ticket, state: newState };
-            }
-            return ticket;
-        });
+        if (action === 'Reinstate') {
+            // Remove the ticket from its current position and add it to the start of the queue
+            updatedTickets = updatedTickets.filter(ticket => ticket.ticket_id !== id);
+            updatedTickets.unshift({ ...tickets.find(ticket => ticket.ticket_id === id), state: 'in Queue' });
+        } else if (action === 'Serve') {
+            // Move any currently serving ticket to 'Done'
+            updatedTickets = updatedTickets.map(ticket => 
+                ticket.state === 'Serving' ? { ...ticket, state: 'Done' } : ticket
+            );
+            // Set the selected ticket to 'Serving'
+            updatedTickets = updatedTickets.map(ticket => 
+                ticket.ticket_id === id ? { ...ticket, state: 'Serving' } : ticket
+            );
+        } else {
+            // Update the ticket state for other actions (Cancel, Done)
+            updatedTickets = updatedTickets.map(ticket => {
+                if (ticket.ticket_id === id) {
+                    return { ...ticket, state: action };
+                }
+                return ticket;
+            });
+        }
 
         setTickets(updatedTickets);
     };
-    
 
 
 
