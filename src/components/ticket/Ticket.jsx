@@ -27,8 +27,8 @@ const Ticket = () => {
   return (
     <div className="ticket-container">
       <div className="header">
-    <img src="https://dltccoffeeimages.s3.amazonaws.com/gauteng_dept_of_transport.jpeg" alt="Logo" className="logo" />
-    <h1 className="welcome-text">Welcome to SMART DLTC</h1>
+    <img src="https://dltccoffeeimages.s3.amazonaws.com/new_logo_dltc.png" alt="Logo" className="logo" />
+    <h1 className="welcome-text">Welcome to SMART LICENSING</h1>
   </div>
   <div className="ticket-info">
     <div className="ticket-number-container">

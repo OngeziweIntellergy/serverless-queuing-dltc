@@ -92,8 +92,8 @@ function Reason() {
     return (
         <div className='container-grid'>
             <div className="header">
-                <img src="https://dltccoffeeimages.s3.amazonaws.com/gauteng_dept_of_transport.jpeg" alt="Logo" className="logo" loading='lazy' />
-                <h1>SMART DLTC</h1>
+                <img src="https://dltccoffeeimages.s3.amazonaws.com/new_logo_dltc.png" alt="Logo" className="logo" loading='lazy' />
+                <h1>SMART LICENSING</h1>
             </div>
             <p>Choose from the below options:</p>
             <div className="grid-container">
