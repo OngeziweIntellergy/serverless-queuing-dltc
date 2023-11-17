@@ -1,12 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import "./Agent.css"; 
-import data from './../../data.json';
 
 function Agent() {
-    const [tickets, setTickets] = useState(data);
+    const [tickets, setTickets] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets'); // Replace with your data URL
+                let data = response.data;
+                data = data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+                console.log(data)
+                setTickets(data.map(ticket => ({
+                    ...ticket,
+                    state: ticket.state,  
+                    ticketNumber: ticket.ticket_number,
+                    ticket_id: ticket.ticket_id
+                })));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
@@ -15,86 +36,53 @@ function Agent() {
     const handleTicketSelect = (ticket) => {
         Swal.fire({
             title: `Ticket NO ${ticket.ticketNumber}`,
-            html: `<strong>Status:</strong> ${ticket.status}<br/><strong>Description:</strong> ${ticket.description}`,
+            html: `<strong>Status:</strong> ${ticket.state}<br/><strong>Description:</strong> ${ticket.user}`,
             icon: 'info',
             confirmButtonText: 'Close'
         });
     };
 
-    const filteredTickets = tickets.filter(ticket => ticket.ticketNumber.toString().includes(searchQuery));
+    // const filteredTickets = tickets.filter(ticket => ticket.ticketNumber.toString().includes(searchQuery));
+    const filteredTickets = tickets.filter(ticket => ticket.ticketNumber && ticket.ticketNumber.toString().includes(searchQuery));
+
 
     const handleSignOut = () => {
         //This is the sign out link redirecting you back to sign in
         window.location.href = 'https://dltc-login.auth.us-east-1.amazoncognito.com/login?client_id=546ingr1kv2p9r9mfcot8v321i&response_type=code&scope=openid&redirect_uri=https%3A%2F%2Ffrontend.d17g06z7kjqaor.amplifyapp.com%2Fagent';
     };
-    
+    const handleAction = (id, action) => {
+        let newState = '';
+        switch (action) {
+            case 'Cancel':
+                newState = 'Cancel';
+                break;
+            case 'Serve':
+                newState = 'Serving';
+                break;
+            case 'Done':
+                newState = 'Done';
+                break;
+            case 'Reinstate':
+                newState = 'in Queue';
+                break;
+            default:
+                return;
+        }
 
-const handleAction = (id, action) => {
-    // Function to actually cancel the ticket
-    const cancelTicket = () => {
+        // Update the ticket state locally
         let updatedTickets = tickets.map(ticket => {
-            if (ticket.id === id && action === 'Cancel') {
-                return { ...ticket, status: 'Cancelled' };
+            if (ticket.ticket_id === id) {
+                return { ...ticket, state: newState };
             }
             return ticket;
         });
+
         setTickets(updatedTickets);
     };
-
-    // If Cancel is clicked on a ticket in the Serving lane
-    if (action === 'Cancel') {
-        const ticketToCancel = tickets.find(ticket => ticket.id === id);
-        if (ticketToCancel && ticketToCancel.status === 'Serving') {
-            Swal.fire({
-                title: 'Cancel Ticket',
-                text: 'Select a reason for cancellation:',
-                input: 'select',
-                inputOptions: {
-                    Delayed: 'Delayed',
-                    Missing : 'Missing Documents',
-                    Missing : 'Missing Documents',
-                    other: 'Other'
-                },
-                inputPlaceholder: 'Select a reason',
-                showCancelButton: true
-            }).then((result) => {
-                if (result.value) {
-                    cancelTicket();
-                }
-            });
-        } else {
-            cancelTicket();
-        }
-    } else {
-        let updatedTickets = tickets.map(ticket => {
-            // If a ticket is being served, move the currently serving ticket to done
-            if (action === 'Serve' && ticket.status === 'Serving') {
-                return { ...ticket, status: 'Done' };
-            }
     
-            if (ticket.id === id) {
-                switch (action) {
-                    case 'Cancel':
-                        return { ...ticket, status: 'Cancelled' };
-                    case 'Serve':
-                        return { ...ticket, status: 'Serving' };
-                    case 'Done':
-                        return { ...ticket, status: 'Done' };
-                    case 'Reinstate':
-                        return { ...ticket, status: 'In Queue' };
-                    default:
-                        return ticket;
-                }
-            }
-            return ticket;
-        });
-    
-        setTickets(updatedTickets);
-    }
-};
 
 
-   
+
 
     const handleReview = (ticketNumber) => {
         Swal.fire({
@@ -126,7 +114,7 @@ const handleAction = (id, action) => {
                 <div className="list-group">
                     {filteredTickets.map(ticket => (
                         <button
-                            key={ticket.id}
+                            key={ticket.ticket_id}
                             className="list-group-item list-group-item-action"
                             onClick={() => handleTicketSelect(ticket)}
                         >
@@ -138,22 +126,22 @@ const handleAction = (id, action) => {
         </div>
         <div className='container-agent  mt-4'>
         
-            {['In Queue', 'Serving', 'Done', 'Cancelled'].map((section) => (
+            {['in Queue', 'Serving', 'Done', 'Cancel'].map((section) => (
                 <div key={section} className="section mb-3">
                     <h2>{section}</h2>
                     <div className="d-flex flex-wrap">
-                        {tickets.filter(ticket => ticket.status === section).map(ticket => (
-                            <div className='card m-2' style={{ width: '18rem' }} key={ticket.id}>
+                        {tickets.filter(ticket => ticket.state === section).map(ticket => (
+                            <div className='card m-2' style={{ width: '18rem' }} key={ticket.ticket_id}>
                                 <div className='card-body'>
                                     <h5 className='card-title'>Ticket NO {ticket.ticketNumber}</h5>
                                     <div className="d-flex justify-content-between">
-                                        {section === 'Cancelled' ? (
-                                            <button className='btn btn-primary' onClick={() => handleAction(ticket.id, 'Reinstate')}>Reinstate</button>
+                                        {section === 'Cancel' ? (
+                                            <button className='btn btn-primary' onClick={() => handleAction(ticket.ticket_id, 'Reinstate')}>Reinstate</button>
                                         ) : (
-                                            <button className='btn btn-danger' onClick={() => handleAction(ticket.id, 'Cancel')}>Cancel</button>
+                                            <button className='btn btn-danger' onClick={() => handleAction(ticket.ticket_id, 'Cancel')}>Cancel</button>
                                         )}
-                                        {ticket.status === 'In Queue' && (
-                                            <button className='btn btn-success' onClick={() => handleAction(ticket.id, 'Serve')}>Serve</button>
+                                        {ticket.state === 'in Queue' && (
+                                            <button className='btn btn-success' onClick={() => handleAction(ticket.ticket_id, 'Serve')}>Serve</button>
                                         )}
                                         {section === 'Done' && (
                                             <button className='btn btn-info' onClick={() => handleReview(ticket.ticketNumber)}>Review</button>

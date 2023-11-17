@@ -32,11 +32,7 @@ function Login() {
     }
 };
 
-  //const handleSubmit = (event) => {
-    //event.preventDefault();
-    // send request to backend
-    //console.log('Login with:', email, password);
-  //};
+
 
   return (
     <div className="login-container">

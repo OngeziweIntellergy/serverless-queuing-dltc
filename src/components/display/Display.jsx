@@ -7,11 +7,11 @@ const Display = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [tasks, setTasks] = useState([])
 
-    // const tasks = [
+    // const tasks ={data: [
     //     { datetime: "2023-11-15T15:18:21.111550", option: "Motor Vehicle License", state: "in Queue", ticket_id: "3eaa297c-ce4d-42fc-9bcc-1e83c2e78bca", ticket_number: 626, user: "Unknown", user_id: "" },
     //     { datetime: "2023-11-15T15:18:21.111550", option: "Professional Driving Permit", state: "in Queue", ticket_id: "3eaa297c-ce4d-42fc-9bcc-1e83c2e78bca", ticket_number: 426, user: "Unknown", user_id: "" },
     //     { datetime: "2023-11-15T15:18:21.111550", option: "Motor Vehicle License", state: "in Queue", ticket_id: "3eaa297c-ce4d-42fc-9bcc-1e83c2e78bca", ticket_number: 66, user: "Unknown", user_id: "" }
-    // ];
+    // ]};
 
     useEffect(()=>{
       setIsLoading(true)
