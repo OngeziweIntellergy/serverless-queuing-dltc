@@ -14,7 +14,7 @@
 }
 
 .welcome-text {
-  font-size: 50px; 
+  font-size: 30px; 
   font-weight: bolder;
   margin-top: 10px;
   color: #004990; 
@@ -29,6 +29,7 @@
 
 .ticket-number-container {
   margin-bottom: 20px; 
+  color:#004990
 }
 
 .ticket-number {

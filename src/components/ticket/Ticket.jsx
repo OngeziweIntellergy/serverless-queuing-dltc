@@ -32,7 +32,7 @@ const Ticket = () => {
   </div>
   <div className="ticket-info">
     <div className="ticket-number-container">
-      <p className="ticket-number">Ticket Number: {ticketNumber}</p>
+      <p className="ticket-number">Ticket NO: {ticketNumber}</p>
       <p >Reason: {reason}</p><br/>
       <small >State: {state}</small>
     </div>
