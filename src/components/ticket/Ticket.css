@@ -38,6 +38,10 @@
   color: #A9A9A9; 
   margin-bottom: 10px; 
 }
+.ticket-number-color{
+  color: #004990;
+  font-size: 42px;
+}
 
 .progress-bar-container {
   width: 80%; 

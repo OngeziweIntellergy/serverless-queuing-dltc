@@ -32,13 +32,11 @@ const Ticket = () => {
   </div>
   <div className="ticket-info">
     <div className="ticket-number-container">
-      <p className="ticket-number">Ticket NO: {ticketNumber}</p>
-      <p >Reason: {reason}</p><br/>
-      <small >State: {state}</small>
+      <p className="ticket-number">Ticket NO: <span className='ticket-number-color'>{ticketNumber}</span> </p>
+      <p >Number on Que: {reason}</p><br/>
+      <small >Reason for visit: {reason}</small>
     </div>
-    {/* <div className="progress-bar-container">
-      <div className="progress-bar" style={{ width: '50%' }}></div>
-    </div> */}
+  
   </div>
     </div>
   );
