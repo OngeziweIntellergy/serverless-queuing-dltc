@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
 import './Login.css';
 
 function Login() {
-  const [cellphone, setCellphone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [activities, setActivities] = useState({
     ProfessionalDrivingPermit: false,
@@ -12,20 +14,32 @@ function Login() {
   });
   const [selectedStations, setSelectedStations] = useState([]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // You'll need to modify this to send the activities and selectedStations
-    // as part of your request payload.
-
-    // ...
-  };
-
   const handleActivityChange = (event) => {
     setActivities({
       ...activities,
       [event.target.value]: event.target.checked,
     });
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log({ email, password,
+      activities,
+      selectedStations
+  })
+  
+    try {
+      const response = await axios.post('https://op0unjbx79.execute-api.us-east-1.amazonaws.com/Dev/login', {
+        email,
+        password,
+        activities,
+        selectedStations
+      });
+      console.log(response.data);
+      // Handle success (e.g., redirect to a dashboard)
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Handle error (e.g., show an error message)
+    }
   };
 
   const handleStationSelect = (event) => {
@@ -36,14 +50,14 @@ function Login() {
     <div className="login-container">
       <div className="login-box">
         <h2 className="login-title">Login</h2>
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" method='POST' onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="cellphone">User Email:</label>
             <input
-              type="tel"  
-              id="cellphone" 
-              value={cellphone} 
-              onChange={(e) => setCellphone(e.target.value)} 
+              type="email"  
+              id="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
               required
             />
           </div>
@@ -58,6 +72,7 @@ function Login() {
               required
             />
           </div>
+          
 
           <fieldset className="input-group">
             <legend>What will you be doing Today?</legend>
