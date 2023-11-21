@@ -52,7 +52,7 @@ function Login() {
         <h2 className="login-title">Login</h2>
         <form className="login-form" method='POST' onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="cellphone">User Email:</label>
+            <label htmlFor="email">User Email:</label>
             <input
               type="email"  
               id="email" 
