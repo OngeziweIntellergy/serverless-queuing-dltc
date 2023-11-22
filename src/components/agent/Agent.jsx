@@ -9,13 +9,10 @@ import "./Agent.css";
 function Agent() {
     const [tickets, setTickets] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [servedCount, setServedCount] = useState(0);
-    const [doneCount, setDoneCount] = useState(0);
-    
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets'); // Replace with your data URL
+                const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
                 let data = response.data;
                 data = data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
                 console.log(data)
@@ -56,15 +53,63 @@ function Agent() {
         });
     };
 
+    // const filteredTickets = tickets.filter(ticket => ticket.ticketNumber.toString().includes(searchQuery));
     const filteredTickets = tickets.filter(ticket => ticket.ticketNumber && ticket.ticketNumber.toString().includes(searchQuery));
 
 
     const handleSignOut = () => {
         //This is the sign out link redirecting you back to sign in
-        window.location.href = 'https://dltc-login.auth.us-east-1.amazoncognito.com/login?client_id=546ingr1kv2p9r9mfcot8v321i&response_type=code&scope=openid&redirect_uri=https%3A%2F%2Ffrontend.d17g06z7kjqaor.amplifyapp.com%2Fagent';
+        window.location.href = 'https://frontend.d17g06z7kjqaor.amplifyapp.com/login';
     };
 
-    
+
+    // const handleAction = (id, action) => {
+    //     let updatedTickets = [...tickets];
+    //     let currentlyServing = updatedTickets.find(ticket => ticket.state === 'Serving');
+
+    //     if (action === 'Serve') {
+    //         if (currentlyServing) {
+    //             // If there is a ticket currently being served, move it to 'Done'
+    //             updatedTickets = updatedTickets.map(ticket => {
+    //                 if (ticket.ticket_id === currentlyServing.ticket_id) {
+    //                     return { ...ticket, state: 'Done' };
+    //                 }
+    //                 return ticket;
+    //             });
+    //         }
+    //         // Set the selected ticket to 'Serving'
+    //         updatedTickets = updatedTickets.map(ticket => {
+    //             if (ticket.ticket_id === id) {
+    //                 return { ...ticket, state: 'Serving' };
+    //             }
+    //             return ticket;
+    //         });
+    //     } else {
+    //         // Handle other actions (Cancel, Done, Reinstate)
+    //         updatedTickets = updatedTickets.map(ticket => {
+    //             if (ticket.ticket_id === id) {
+    //                 let newState = '';
+    //                 switch (action) {
+    //                     case 'Cancel':
+    //                         newState = 'Cancel';
+    //                         break;
+    //                     case 'Done':
+    //                         newState = 'Done';
+    //                         break;
+    //                     case 'Reinstate':
+    //                         newState = 'in Queue';
+    //                         break;
+    //                     default:
+    //                         newState = ticket.state; // No change in state
+    //                 }
+    //                 return { ...ticket, state: newState };
+    //             }
+    //             return ticket;
+    //         });
+    //     }
+
+    //     setTickets(updatedTickets);
+    // };
 
     const handleAction = async (id, action) => {
         let updatedTickets = [...tickets];
@@ -114,19 +159,18 @@ function Agent() {
                 });
 
                 if (!result.isConfirmed) {
-                    return; 
+                    return; // Exit the function if cancelled
                 }
- 
+                // If confirmed, proceed to update the ticket state to 'Cancel'
             }
         }
 
-        if (action === 'in Queue') {
-            // Remove the ticket from its current position
+        if (action === 'Reinstate') {
+            // Remove the ticket from its current position and add it to the start of the queue
             updatedTickets = updatedTickets.filter(ticket => ticket.ticket_id !== id);
-            // Add it back to the start of the queue with state 'in Queue'
             updatedTickets.unshift({ ...tickets.find(ticket => ticket.ticket_id === id), state: 'in Queue' });
-        } else if (action === 'Serving') {
-            // Find and move the currently serving ticket to 'Done', if any
+        } else if (action === 'Serve') {
+            // Move any currently serving ticket to 'Done'
             updatedTickets = updatedTickets.map(ticket => 
                 ticket.state === 'Serving' ? { ...ticket, state: 'Done' } : ticket
             );
@@ -135,7 +179,7 @@ function Agent() {
                 ticket.ticket_id === id ? { ...ticket, state: 'Serving' } : ticket
             );
         } else {
-            // Handle other actions (Cancel, Done)
+            // Update the ticket state for other actions (Cancel, Done)
             updatedTickets = updatedTickets.map(ticket => {
                 if (ticket.ticket_id === id) {
                     return { ...ticket, state: action };
@@ -162,9 +206,6 @@ function Agent() {
         }
     };
 
-
-
-
     const handleReview = (ticketNumber) => {
         Swal.fire({
             title: 'Review Ticket',
@@ -174,68 +215,61 @@ function Agent() {
         });
     };
 
+    const handleSignOut = () => {
+        window.location.href = 'https://frontend.d17g06z7kjqaor.amplifyapp.com/login';
+    };
+
+    const filteredTickets = tickets.filter(ticket => ticket.ticketNumber && ticket.ticketNumber.toString().includes(searchQuery));
+
     return (
         <>
-       
 
         <div className="sign-out-container">
-            <div className='search-bar'>
-                
-                <input
-                        type="text"
-                        className="form-control mb-3"
-                        placeholder="Search ticket by number..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                    />
-                    {searchQuery && (
-                        <div className="list-group">
-                            {filteredTickets.map(ticket => (
-                                <button
-                                    key={ticket.ticket_id}
-                                    className="list-group-item list-group-item-action"
-                                    onClick={() => handleTicketSelect(ticket)}
-                                >
-                                    Ticket NO {ticket.ticketNumber}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-            </div>
-            <div className='manage-page'>
-            
             <button className="btn btn-secondary" onClick={handleSignOut}>
                 Sign Out
             </button>
-
-            </div>
-            
-            
         </div>
 
-        
-        
-            <h3>Tickets Done: {doneCount}</h3>
-
-           
+        <div>
+            <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Search ticket by number..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+            />
+            {searchQuery && (
+                <div className="list-group">
+                    {filteredTickets.map(ticket => (
+                        <button
+                            key={ticket.ticket_id}
+                            className="list-group-item list-group-item-action"
+                            onClick={() => handleTicketSelect(ticket)}
+                        >
+                            Ticket NO {ticket.ticketNumber}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
         <div className='container-agent  mt-4'>
         
             {['in Queue', 'Serving', 'Done', 'Cancel'].map((section) => (
                 <div key={section} className="section mb-3">
                     <h2>{section}</h2>
                     <div className="d-flex flex-wrap">
-                        {tickets.filter(ticket => ticket.state === section).map(ticket => (    
+                        {tickets.filter(ticket => ticket.state === section).map(ticket => (
                             <div className='card m-2' style={{ width: '18rem' }} key={ticket.ticket_id}>
                                 <div className='card-body'>
                                     <h5 className='card-title'>Ticket NO {ticket.ticketNumber}</h5>
                                     <div className="d-flex justify-content-between">
                                         {section === 'Cancel' ? (
-                                            <button className='btn btn-primary' onClick={() => handleAction(ticket.ticket_id, 'in Queue')}>Reinstate</button>
+                                            <button className='btn btn-primary' onClick={() => handleAction(ticket.ticket_id, 'Reinstate')}>Reinstate</button>
                                         ) : (
                                             <button className='btn btn-danger' onClick={() => handleAction(ticket.ticket_id, 'Cancel')}>Cancel</button>
                                         )}
                                         {ticket.state === 'in Queue' && (
-                                            <button className='btn btn-success' onClick={() => handleAction(ticket.ticket_id, 'Serving')}>Serve</button>
+                                            <button className='btn btn-success' onClick={() => handleAction(ticket.ticket_id, 'Serve')}>Serve</button>
                                         )}
                                         {section === 'Done' && (
                                             <button className='btn btn-info' onClick={() => handleReview(ticket.ticketNumber)}>Review</button>
