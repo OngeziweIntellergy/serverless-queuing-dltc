@@ -6,7 +6,7 @@ import './Login.css'; // Assuming you have a CSS file for styling
 function Login() {
 
   const navigate = useNavigate(); // Create an instance of useNavigate for navigation
-  const [email, setEmail] = useState(''); // State for email
+  const [username, setUsername] = useState(''); // State for email
   const [password, setPassword] = useState(''); // State for password
   const [activities, setActivities] = useState({ // State for activities
     ProfessionalDrivingPermit: false,
@@ -29,28 +29,30 @@ function Login() {
     setSelectedStations([...event.target.selectedOptions].map(o => o.value));
   };
   const payload={
-    email,
+    username,
     password,
     activities,
     selectedStations}
+  
 
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       console.log(payload)
-      const response = await axios.post('https://op0unjbx79.execute-api.us-east-1.amazonaws.com/Dev/login', {
-        method: 'POST',
+      const response = await fetch('https://op0unjbx79.execute-api.us-east-1.amazonaws.com/Dev/login', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',                    
                 },
                 body: JSON.stringify(payload),
-        // email,
-        // password,
-        // activities,
-        // selectedStations
-      });
-      console.log("hello")
+            });
+      // const response = await axios.post('https://op0unjbx79.execute-api.us-east-1.amazonaws.com/Dev/login', {
+      //   method: 'post',
+      //   headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin':'*' },
+      //   body: JSON.stringify(payload)
+      // });
+      console.log(response)
       navigate('/agent');
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -65,13 +67,24 @@ function Login() {
         <p className="welcome-text">Welcome to SMART LICENSING</p>
 
         <form className="login-form" onSubmit={handleSubmit}>
-          <div className="input-group">
+          {/* <div className="input-group">
             <label htmlFor="email">User Email:</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div> */}
+
+          <div className="input-group">
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>

@@ -9,7 +9,6 @@ const Display = () => {
 
     // const tasks ={data: [
  
-
     useEffect(()=>{
       setIsLoading(true)
       const fetchOptions =async()=>{
