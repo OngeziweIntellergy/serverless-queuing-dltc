@@ -1,63 +1,77 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-import './Login.css';
+import './Login.css'; // Assuming you have a CSS file for styling
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [activities, setActivities] = useState({
+
+  const navigate = useNavigate(); // Create an instance of useNavigate for navigation
+  const [email, setEmail] = useState(''); // State for email
+  const [password, setPassword] = useState(''); // State for password
+  const [activities, setActivities] = useState({ // State for activities
     ProfessionalDrivingPermit: false,
     OperatingLicence: false,
     MotorVehicleLicense: false,
     DriverRenewalLicense: false,
   });
-  const [selectedStations, setSelectedStations] = useState([]);
+  const [selectedStations, setSelectedStations] = useState([]); // State for selected stations
 
+  // Function to handle checkbox changes
   const handleActivityChange = (event) => {
     setActivities({
       ...activities,
       [event.target.value]: event.target.checked,
     });
   };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log({ email, password,
-      activities,
-      selectedStations
-  })
-  
-    try {
-      const response = await axios.post('https://op0unjbx79.execute-api.us-east-1.amazonaws.com/Dev/login', {
-        email,
-        password,
-        activities,
-        selectedStations
-      });
-      console.log(response.data);
-      // Handle success (e.g., redirect to a dashboard)
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      // Handle error (e.g., show an error message)
-    }
-  };
 
+  // Function to handle station selection
   const handleStationSelect = (event) => {
     setSelectedStations([...event.target.selectedOptions].map(o => o.value));
+  };
+  const payload={
+    email,
+    password,
+    activities,
+    selectedStations}
+
+  // Function to handle form submission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      console.log(payload)
+      const response = await axios.post('https://op0unjbx79.execute-api.us-east-1.amazonaws.com/Dev/login', {
+        method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',                    
+                },
+                body: JSON.stringify(payload),
+        // email,
+        // password,
+        // activities,
+        // selectedStations
+      });
+      console.log("hello")
+      navigate('/agent');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
+        <img src="https://dltccoffeeimages.s3.amazonaws.com/new_logo_dltc.png" alt="Smart Licensing Logo" className="login-logo"/>
         <h2 className="login-title">Login</h2>
-        <form className="login-form" method='POST' onSubmit={handleSubmit}>
+        <p className="welcome-text">Welcome to SMART LICENSING</p>
+
+        <form className="login-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">User Email:</label>
             <input
-              type="email"  
-              id="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -72,7 +86,6 @@ function Login() {
               required
             />
           </div>
-          
 
           <fieldset className="input-group">
             <legend>What will you be doing Today?</legend>
@@ -89,19 +102,19 @@ function Login() {
             ))}
           </fieldset>
 
-              <div className="input-group">
-              <label htmlFor="stations">Select Station:</label>
-              <select
-                id="stations"
-                name="stations"
-                value={selectedStations}
-                onChange={handleStationSelect}
-              >
-                {Array.from({ length: 16 }, (_, i) => (
-                  <option key={i} value={`Station ${i + 1}`}>{`Station ${i + 1}`}</option>
-                ))}
-              </select>
-            </div>
+          <div className="input-group">
+            <label htmlFor="stations">Select Station:</label>
+            <select
+              id="stations"
+              name="stations"
+              value={selectedStations}
+              onChange={handleStationSelect}
+            >
+              {Array.from({ length: 16 }, (_, i) => (
+                <option key={i} value={`Station ${i + 1}`}>{`Station ${i + 1}`}</option>
+              ))}
+            </select>
+          </div>
 
           <button type="submit" className="login-button">Login</button>
         </form>

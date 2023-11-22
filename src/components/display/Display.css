@@ -34,7 +34,7 @@
   flex-grow: 1;
   overflow-y: auto; /* Allows scrolling within the section */
 }
-
+.color-change{color: #fff;}
 .card-title {
   font-size: 1rem;
 }
@@ -55,7 +55,9 @@
 .card-body {
   display: flex;
   flex-direction: column;
+  
 }
+.ticket-color{background-color: #004990;}
 
 .card-body > .mt-3 {
   margin-top: auto; /* Pushes the consultant and station info to the bottom */

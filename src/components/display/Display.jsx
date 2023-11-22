@@ -31,8 +31,8 @@ const Display = () => {
 
     const columns = [
         { name: 'prdb', title: 'Operating Licence' },
-        { name: 'motoCycleVehicle', title: 'Professional Driving Permit' },
         { name: 'learners', title: 'Motor Vehicle License' },
+        { name: 'motoCycleVehicle', title: 'Professional Driving Permit' },
         { name: 'driversLicence', title: 'Driver Renewal Licence' },
     ];
 
@@ -89,13 +89,10 @@ const KanbanTask = ({ task, isServing }) => {
     return (
         <div className={`card mb-2 ${isServing ? "serving-task" : "upcoming-task"}`}>
             <div className="card-body">
-                <div className="d-flex justify-content-center align-items-center">
-                    <p className="ticket-number badge badge-pill badge-success">{task.ticket_number}</p>
+                <div className="d-flex justify-content-center align-items-center ticket-color">
+                    <p className="ticket-number badge badge-pill badge-success"> No <span className='color-change'>{task.ticket_number}</span> </p>
                 </div>
-                <div className="consultant-station mt-2">
-                    <span className="font-weight-bold text-dark">User: {task.user}</span><br />
-                    <span className="font-weight-bold text-dark">State: {task.state}</span>
-                </div>
+                
             </div>
         </div>
     );
