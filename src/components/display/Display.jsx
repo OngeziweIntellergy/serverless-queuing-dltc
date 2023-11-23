@@ -25,7 +25,7 @@ const Display = () => {
       }
     };
     fetchOptions();
-  }, []);
+  }, [tasks]);
 
   const columns = [
     { name: 'prdb', title: 'Operating Licence' },
