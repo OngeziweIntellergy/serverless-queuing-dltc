@@ -14,6 +14,7 @@ function Agent() {
     const speakText = (text) => {
         if ('speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.85; // Adjust the rate as needed, 0.75 for slower speech
             window.speechSynthesis.speak(utterance);
         } else {
             console.error("Your browser does not support text-to-speech.");
@@ -91,6 +92,7 @@ function Agent() {
             const ticketBeingServed = updatedTickets.find(ticket => ticket.ticket_id === id);
             if (ticketBeingServed) {
                 const ticketNumber = ticketBeingServed.ticketNumber;
+                
                 speakText(`Now serving ticket number ${ticketNumber} at station number 1.`);
             }
         } else {
