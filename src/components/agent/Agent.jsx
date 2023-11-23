@@ -27,6 +27,7 @@ function Agent() {
                 const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
                 let data = response.data;
                 data = data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
                 console.log(data);
                 
                 const processedTickets = data.map(ticket => ({
