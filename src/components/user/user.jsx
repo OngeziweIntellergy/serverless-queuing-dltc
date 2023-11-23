@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
-import './User.css'
+import './user.css';
 import Swal from 'sweetalert2';
 
 const columns = [
