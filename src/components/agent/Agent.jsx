@@ -70,25 +70,27 @@ function Agent() {
     const handleSignOut = () => {
         window.location.href = 'https://frontend.d17g06z7kjqaor.amplifyapp.com/login';
     };
-
     const handleAction = async (id, action) => {
         let updatedTickets = [...tickets];
+        updateTicketState(id,action)
+        
 
         if (action === 'Serving') {
             const currentlyServingTicket = updatedTickets.find(ticket => ticket.state === 'Serving');
+        
+            // If there's a ticket being served, move it to 'Done'
             if (currentlyServingTicket) {
                 const updatedServingTicket = { ...currentlyServingTicket, state: 'Done' };
                 updatedTickets = updatedTickets.map(ticket => 
                     ticket.ticket_id === currentlyServingTicket.ticket_id ? updatedServingTicket : ticket
                 );
-                await updateTicketState(currentlyServingTicket.ticket_id, 'Done');
+                 updateTicketState(currentlyServingTicket.ticket_id, 'Done');
             }
 
+            // Set the selected ticket to 'Serving'
             updatedTickets = updatedTickets.map(ticket =>
-                ticket.ticket_id === id ? { ...ticket, state: 'Serving' } : ticket
+                ticket.ticket_id === id ? { ...ticket, state: 'Done' } : ticket
             );
-
-            // Announce the ticket being served
             const ticketBeingServed = updatedTickets.find(ticket => ticket.ticket_id === id);
             if (ticketBeingServed) {
                 const ticketNumber = ticketBeingServed.ticketNumber;
@@ -96,20 +98,78 @@ function Agent() {
                 speakText(`Now serving ticket number ${ticketNumber} at station number 1.`);
             }
         } else {
+            // Handle other actions (Cancel, Done, Reinstate)
+            updatedTickets = updatedTickets.map(ticket => {
+                if (ticket.ticket_id === id) {
+                    return { ...ticket, state: action };
+                }
+                return ticket;
+            });
+        }
+
+        if (action === 'Cancel') {
+            const ticketToCancel = updatedTickets.find(ticket => ticket.ticket_id === id);
+            if (ticketToCancel && ticketToCancel.state === 'Serving') {
+                const result = await Swal.fire({
+                    title: 'Cancel Ticket',
+                    text: 'Select a reason for not attending the customer:',
+                    input: 'select',
+                    inputOptions: {
+                        'no-show': 'Customer No-Show',
+                        'closed': 'Service Closed',
+                        'other': 'Other'
+                    },
+                    inputPlaceholder: 'Select a reason',
+                    showCancelButton: true
+                });
+
+                if (!result.isConfirmed) {
+                    return; 
+                }
+ 
+            }
+        }
+
+        if (action === 'in Queue') {
+            // Remove the ticket from its current position
+            updatedTickets = updatedTickets.filter(ticket => ticket.ticket_id !== id);
+            // Add it back to the start of the queue with state 'in Queue'
+            updatedTickets.unshift({ ...tickets.find(ticket => ticket.ticket_id === id), state: 'in Queue' });
+        } else if (action === 'Serving') {
+            // Find and move the currently serving ticket to 'Done', if any
             updatedTickets = updatedTickets.map(ticket => 
-                ticket.ticket_id === id ? { ...ticket, state: action } : ticket
+                ticket.state === 'Serving' ? { ...ticket, state: 'Done' } : ticket
             );
+            // Set the selected ticket to 'Serving'
+            updatedTickets = updatedTickets.map(ticket => 
+                ticket.ticket_id === id ? { ...ticket, state: 'Serving' } : ticket
+            );
+        } else {
+            // Handle other actions (Cancel, Done)
+            updatedTickets = updatedTickets.map(ticket => {
+                if (ticket.ticket_id === id) {
+                    return { ...ticket, state: action };
+                }
+                return ticket;
+            });
         }
 
         setTickets(updatedTickets);
         updateCounters();
+        await updateTicketState(id, action);
     };
 
+    
+
     const updateTicketState = async (id, newState) => {
+       
         try {
-            await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, { state: newState, ticket_id: id });
+            const response = await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, { state: newState, ticket_id: id });
+            
+            return response.data;
         } catch (error) {
             console.error("Error updating ticket:", error);
+
         }
     };
 
@@ -127,6 +187,7 @@ function Agent() {
     return (
         <>
             <div className="sign-out-container">
+                <div className='search-section'>
                 <input
                     type="text"
                     className="form-control mb-3"
@@ -147,15 +208,21 @@ function Agent() {
                         ))}
                     </div>
                 )}
-                <button className="btn btn-secondary" onClick={handleSignOut}>
-                    Sign Out
-                </button>
+                </div>
+                <div className='btn-section'>
+                    <button className="btn btn-secondary" onClick={handleSignOut}>
+                        Sign Out
+                    </button>
+                </div>
+               
+                
             </div>
+            <h3>Tickets Done: {doneCount}</h3>
 
             <div className='container-agent mt-4'>
-                <h3>Tickets Done: {doneCount}</h3>
+                
                 {['in Queue', 'Serving', 'Done', 'Cancel'].map((section) => (
-                    <div key={section} className="section mb-3">
+                    <div key={section} className="section mb-3 lane">
                         <h2>{section}</h2>
                         <div className="d-flex flex-wrap">
                             {tickets.filter(ticket => ticket.state === section).map(ticket => (
