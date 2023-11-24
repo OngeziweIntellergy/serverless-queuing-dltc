@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import {requestPermission, onMessageListener} from "../firebase"
 import axios from 'axios';
 import './Ticket.css';
+import { Toast } from 'bootstrap';
 
 const Ticket = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -8,8 +11,10 @@ const Ticket = () => {
   const [ticketState, setTicketState] = useState('');
   const [numberInQueue, setNumberInQueue] = useState('');
   const [estimatedServiceTime, setEstimatedServiceTime] = useState('');
+  const [notification, setNotification] = useState({title:"", body:""})
 
   useEffect(() => {
+    requestPermission();
     const storedTicketData = localStorage.getItem('requestDetails');
     if (storedTicketData) {
       const ticketDetails = JSON.parse(storedTicketData);
@@ -18,6 +23,15 @@ const Ticket = () => {
       setTicketNumber(resdata.ticket_number);
       setReason(resdata.option);
       setTicketState(resdata.state);
+      const unsubscribe = onMessageListener().then(payload=>{
+        setNotification({
+          title:"Move closer to the center",
+          body: resdata.ticketNumber +" move closer to the stattion"
+        })
+      })
+      return ()=>{
+        unsubscribe.catch(err=>console.log("failed", err))
+      }
     }
   }, []);
 
@@ -56,6 +70,7 @@ const Ticket = () => {
 
   return (
     <div className="ticket-container">
+      <Toaster />
       <div className="header">
         <img src="https://dltccoffeeimages.s3.amazonaws.com/new_logo_dltc.png" alt="Logo" className="logo" />
         <h1 className="welcome-text">Welcome to SMART LICENSING</h1>
