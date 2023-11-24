@@ -47,10 +47,11 @@ const Ticket = () => {
 
     const currentTime = new Date();
     currentTime.setMinutes(currentTime.getMinutes() + totalWaitTime);
+    console.log(currentTime)
 
     // Converting to South African Standard Time (SAST) UTC+2
     const sastTime = new Date(currentTime.getTime() + (2 * 60 * 60 * 1000)); // Adding 2 hours for SAST
-    setEstimatedServiceTime(sastTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' }));
+    setEstimatedServiceTime(currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' , hour12: true}));
   };
 
   return (
