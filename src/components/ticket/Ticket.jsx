@@ -78,7 +78,7 @@ const Ticket = () => {
 
     // Converting to South African Standard Time (SAST) UTC+2
     const sastTime = new Date(currentTime.getTime() + (2 * 60 * 60 * 1000)); // Adding 2 hours for SAST
-    setEstimatedServiceTime(currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' , hour12: true}));
+    setEstimatedServiceTime(currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' , hour24: true}));
   };
 
   return (

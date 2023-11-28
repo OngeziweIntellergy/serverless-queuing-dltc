@@ -10,7 +10,7 @@ function Agent() {
     const [servedCount, setServedCount] = useState(0);
     const [doneCount, setDoneCount] = useState(0);
 
-    // Text-to-Speech Function
+    // // Text-to-Speech Function
     const speakText = (text) => {
         if ('speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(text);

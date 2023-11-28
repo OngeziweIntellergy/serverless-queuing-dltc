@@ -8,12 +8,12 @@ import Ticket from './components/ticket/Ticket';
 import Login from './components/login/Login';
 import User from './components/user/user';
 
+
 function App() {
   return (
     <Router>
       <div className="App">
         {/* <nav>
-         
           <Link to="/">Home</Link>
           <Link to="/reason">Reason</Link>
           <Link to="/agent">Agent</Link>
@@ -31,6 +31,9 @@ function App() {
         </Routes>
       </div>
     </Router>
+
+        
+
   );
 }
 
