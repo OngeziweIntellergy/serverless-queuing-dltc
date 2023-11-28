@@ -1,69 +1,77 @@
 const AWS = require('aws-sdk');
 AWS.config.update({
-    region:'us-east-1'
-})
-const util = require('../utils/utils')
-const bcrypt=require('bcryptjs')
-const dynamodb =new AWS.DynamoDB.DocumentClient();
-const userTable = "examiners"
+    region: 'us-east-1'
+});
+const util = require('../utils/utils');
+const bcrypt = require('bcryptjs');
+const dynamodb = new AWS.DynamoDB.DocumentClient();
+const userTable = "examiners";
 
-async function register(userInfo){
-    const name =userInfo.name;
-    const email =userInfo.email;
-    const username =userInfo.username;
-    const station =userInfo.station;
-    const userRole =userInfo.userRole;
-    const password =userInfo.password;
+async function register(userInfo) {
+    const { name, email, username, station, userRole, password } = userInfo;
 
-    if(!username || !name || !password){
-        return util.buildResponse(401, {
+    if (!username || !name || !password) {
+        return util.buildResponse(400, {
             message: 'All fields are required'
-        })
+        });
     }
 
-    const dynamoUser = await getUser(username);
-    if(dynamoUser && dynamoUser.username){
-        return util.buildResponse(401, {
-            message:'Username already exists, please use a different username'
-        })
+    try {
+        const dynamoUser = await getUser(username.toLowerCase().trim());
+        if (dynamoUser) {
+            return util.buildResponse(400, {
+                message: 'Username already exists, please use a different username'
+            });
+        }
+
+        const encryptedPw = bcrypt.hashSync(password.trim(), 10);
+        const user = {
+            name,
+            email,
+            username: username.toLowerCase().trim(),
+            station,
+            userRole,
+            password: encryptedPw
+        };
+
+        const saveUserResponse = await saveUser(user);
+        if (!saveUserResponse) {
+            return util.buildResponse(503, { message: 'Server Error, Please try again' });
+        }
+
+        return util.buildResponse(200, { username });
+    } catch (error) {
+        console.error('Error in registration:', error);
+        return util.buildResponse(500, { message: 'Internal Server Error' });
     }
-    const encryptedPw = bcrypt.hashSync(password.trim(), 10);
-    const user = {
-        name:name,
-        email:email,
-        username:username.toLowerCase().trim(),
-        station:station,
-        userRole:userRole,
-        passsword:encryptedPw
-    }
-
-    const saveUserResponse = await saveUser(user);
-    if(!saveUserResponse){
-        return util.buildResponse(503, {message: ' Server Error, Please try again'})
-    }
-
-    return util.buildResponse(200, {username:username})
-
-
 }
-async function getUser(username){
+
+async function getUser(username) {
     const params = {
-        TableName:userTable,
-        Key: {username:username}
-    }
-    return await dynamodb.get(params).promise().then(response=>{
+        TableName: userTable,
+        Key: { username }
+    };
+    try {
+        const response = await dynamodb.get(params).promise();
         return response.Item;
-    }, error=>{console.error('There is an error', error)})
-}
-
-async function saveUser(user){
-    const params={
-        TableName:userTable, 
-        Item:user
+    } catch (error) {
+        console.error('There is an error getting the user:', error);
+        throw error; // Rethrow the error to be handled by the caller
     }
-    return await dynamodb.put(params).promise().then(()=>{
-        return true;
-    }, error=>{console.error("There was an error saving the user", error)})
 }
 
-module.exports.register =register
+async function saveUser(user) {
+    const params = {
+        TableName: userTable,
+        Item: user
+    };
+    try {
+        await dynamodb.put(params).promise();
+        return true;
+    } catch (error) {
+        console.error("There was an error saving the user:", error);
+        throw error; // Rethrow the error to be handled by the caller
+    }
+}
+
+module.exports.register = register;
