@@ -79,9 +79,11 @@ function Reason() {
        
         const payload = generatePayload(option);
         sendRequest({
-            "user_id": "",
             "option":option,
-            "state": "in Queue"
+            "state": "in Queue",
+            
+
+
           }); 
   
         

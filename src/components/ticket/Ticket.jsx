@@ -1,62 +1,17 @@
-import React, { useEffect, useState } from 'react';
-// import toast, { Toaster } from 'react-hot-toast';
-// import {requestPermission, onMessageListener} from "../firebase"
+import React, { useEffect, useState, useCallback } from 'react';
+import Swal from 'sweetalert2';
 import axios from 'axios';
 import './Ticket.css';
-// import { Toast } from 'bootstrap';
 
 const Ticket = () => {
   const [ticketNumber, setTicketNumber] = useState('');
   const [reason, setReason] = useState('');
-  const [ticketState, setTicketState] = useState('');
-  const [numberInQueue, setNumberInQueue] = useState('');
+  const [numberInQueue, setNumberInQueue] = useState(0);
   const [estimatedServiceTime, setEstimatedServiceTime] = useState('');
-  // const [notification, setNotification] = useState({title:"", body:""})
+  const [serviceTime, setServiceTime] = useState(0);
+  const [timer, setTimer] = useState(null);
 
-  useEffect(() => {
-    // requestPermission();
-    const storedTicketData = localStorage.getItem('requestDetails');
-    if (storedTicketData) {
-      const ticketDetails = JSON.parse(storedTicketData);
-      let resdata = ticketDetails.data;
-      calculateNumberInQueue(resdata.datetime, resdata.option);
-      setTicketNumber(resdata.ticket_number);
-      setReason(resdata.option);
-      setTicketState(resdata.state);
-      const intervalId = setInterval(() => {
-        updateQueueInfo();
-      }, 60000); // Update every 60 seconds
-  
-      return () => clearInterval(intervalId);
-      // const unsubscribe = onMessageListener().then(payload=>{
-      //   setNotification({
-      //     title:"Move closer to the center",
-      //     body: resdata.ticketNumber +" move closer to the stattion"
-      //   })
-      // })
-      // return ()=>{
-      //   unsubscribe.catch(err=>console.log("failed", err))
-      // }
-    }
-  }, []);
-  const updateQueueInfo = async () => {
-    const storedTicketData = localStorage.getItem('requestDetails');
-    if (storedTicketData) {
-      const ticketDetails = JSON.parse(storedTicketData);
-      let resdata = ticketDetails.data;
-      calculateNumberInQueue(resdata.datetime, resdata.option);
-    }
-  };
-
-  const countTicketsBefore = (tickets, currentTicketDateTime, option) => {
-    return tickets.filter(ticket => 
-      new Date(ticket.datetime) < new Date(currentTicketDateTime) &&
-      ticket.option === option &&
-      ticket.state === 'in Queue'
-    ).length;
-  };
-
-  const calculateNumberInQueue = async (dateTime, option) => {
+  const calculateNumberInQueue = useCallback(async (dateTime, option) => {
     try {
       const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
       const tickets = response.data;
@@ -64,36 +19,127 @@ const Ticket = () => {
       setNumberInQueue(numberBefore);
       calculateEstimatedServiceTime(numberBefore);
     } catch (error) {
-      console.error("Error fetching tickets: ", error);
+      Swal.fire("Error", "Error fetching tickets: " + error.message, "error");
+    }
+  }, []);
+
+  useEffect(() => {
+    const updateQueue = async () => {
+      const storedTicketData = localStorage.getItem('requestDetails');
+      if (storedTicketData) {
+        const ticketDetails = JSON.parse(storedTicketData);
+        let resdata = ticketDetails.data;
+        await calculateNumberInQueue(resdata.datetime, resdata.option);
+        setTicketNumber(resdata.ticket_number);
+        setReason(resdata.option);
+      }
+    };
+    updateQueue();
+    
+    const intervalId = setInterval(updateQueue, 10000); // Update queue every 10 seconds
+    return () => clearInterval(intervalId);
+  }, [calculateNumberInQueue]);
+
+ 
+
+  const startServiceTimer = useCallback(() => {
+    setTimer(setInterval(() => {
+      setServiceTime(time => time + 1);
+    }, 1000));
+  }, []);
+  
+  const stopServiceTimer = useCallback(() => {
+    clearInterval(timer);
+    setTimer(null);
+    Swal.fire({
+      title: 'Rate Our Service',
+      text: 'Please rate the service you received.',
+      icon: 'question',
+      input: 'range',
+      inputAttributes: {
+        min: 1,
+        max: 5,
+        step: 1
+      },
+      inputLabel: 'Rating',
+      confirmButtonText: 'Submit'
+    }).then(result => {
+      if (result.value) {
+        updateTicketWithTimeAndRating(serviceTime, result.value);
+        setServiceTime(0);
+      }
+    });
+  }, [timer, serviceTime]);
+  useEffect(() => {
+    if (numberInQueue === 1 && !timer) {
+      startServiceTimer();
+      console.log(numberInQueue)
+      console.log(startServiceTimer())
+    } else if (numberInQueue < 1 && timer) {
+      stopServiceTimer();
+    }
+  }, [numberInQueue, timer, startServiceTimer, stopServiceTimer]);
+  const updateTicketWithTimeAndRating = async (time, rating) => {
+    try {
+      await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, {
+        serviceTime: time,
+        serviceRating: rating
+      });
+    } catch (error) {
+      Swal.fire("Error", "Error updating ticket: " + error.message, "error");
     }
   };
 
+  const countTicketsBefore = (tickets, currentTicketDateTime, option) => {
+    const count = tickets.filter(ticket => 
+      new Date(ticket.datetime) < new Date(currentTicketDateTime) &&
+      ticket.option === option &&
+      ticket.state === 'in Queue'
+    ).length;
+
+    return count +1;
+  };
+
   const calculateEstimatedServiceTime = (numberBefore) => {
-    const averageWaitTimePerPerson = 15; // Average wait time in minutes per person
-    const totalWaitTime = numberBefore * averageWaitTimePerPerson; // Total wait time in minutes
+    const averageWaitTimePerPerson = 15;
+    const totalWaitTime = numberBefore * averageWaitTimePerPerson;
 
     const currentTime = new Date();
     currentTime.setMinutes(currentTime.getMinutes() + totalWaitTime);
-    console.log(currentTime)
 
-    // Converting to South African Standard Time (SAST) UTC+2
-    const sastTime = new Date(currentTime.getTime() + (2 * 60 * 60 * 1000)); // Adding 2 hours for SAST
-    setEstimatedServiceTime(currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' , hour24: true}));
+    setEstimatedServiceTime(currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit', hour24: true }));
+  };
+
+  const queueMessage = () => {
+    if (numberInQueue === 1) {
+      console.log(numberInQueue)
+
+      return "Move closer, you're next in line!";
+    } else if (numberInQueue === 2) {
+      console.log(numberInQueue)
+
+      return "Move closer, you're second in line!";
+    } else if(numberInQueue === 0){
+      console.log(numberInQueue)
+      return "Currently serving";
+    } else {
+      return <span className='ticket-number-color-fontSize'>{numberInQueue}</span>;
+    }
   };
 
   return (
     <div className="ticket-container">
-      {/* <Toaster /> */}
       <div className="header">
         <img src="https://dltccoffeeimages.s3.amazonaws.com/new_logo_dltc.png" alt="Logo" className="logo" />
         <h1 className="welcome-text">Welcome to SMART LICENSING</h1>
+        
       </div>
       <div className="ticket-info">
         <div className="ticket-number-container">
-          <p className="ticket-number">Ticket NO: <span className='ticket-number-color'>{ticketNumber}</span> </p>
-          <p>Number in Queue: {numberInQueue}</p>
-          <p>Estimated Service Time: {estimatedServiceTime}</p>
-          <small>Reason for visit: {reason}</small>
+          <p className="ticket-number">Ticket NO: <span className='ticket-number-color'>{ticketNumber}</span></p>
+          <p>Number in Queue: <span className='ticket-number-color-fontSize'>{queueMessage()}</span></p>
+          <p>Estimated Service Time: <span className='ticket-number-color-fontSize'>{estimatedServiceTime}</span></p>
+          <p>Reason for visit: <span className='ticket-number-color-bold'>{reason}</span></p>
         </div>
       </div>
     </div>
