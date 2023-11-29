@@ -19,15 +19,15 @@ module.exports.handler = async (event) => {
       response = util.buildResponse(200);
     } else if (event.httpMethod === 'POST' && event.path === registerPath) {
       const registerBody = JSON.parse(event.body);
-      response = await registerService.register(registerBody);
+      response =  await registerService.register(registerBody);
     } else if (event.httpMethod === 'POST' && event.path === loginPath) {
       const loginBody = JSON.parse(event.body);
-      response = await loginService.login(loginBody);
+      response =  loginService.login(loginBody);
     } else if (event.httpMethod === 'POST' && event.path === verifyPath) {
       const verifyBody = JSON.parse(event.body);
-      response = await verifyService.verify(verifyBody);
+      response = verifyService.verify(verifyBody);
     } else {
-      response = util.buildResponse(404, '404 not found');
+      response = util.buildResponse(404, '404 not found!');
     }
 
     return response || util.buildResponse(500, 'Internal Server Error');

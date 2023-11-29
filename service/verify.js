@@ -1,27 +1,37 @@
 const util = require('../utils/utils');
-const auth = require('../utils/auth')
+const auth = require('../utils/auth');
 
-
-function verify(requestBody){
-    if(!requestBody.user || !requestBody.user.username || !requestBody.token){
+function verify(requestBody) {
+    if (!requestBody.user || !requestBody.user.username || !requestBody.token) {
         return util.buildResponse(401, {
             verified: false,
-            message: 'incorrect request body'
-        })
+            message: 'Incorrect request body'
+        });
     }
-    const user = requestBody.user;
-    const token = requestBody.token;
-    const verification = auth.verifyToken(user.username, token);
-    if(!verification.verified){
-        return util.buildResponse(401, verification)
 
+    try {
+        const user = requestBody.user;
+        const token = requestBody.token;
+        const verification = auth.verifyToken(user.username, token);
+
+        if (!verification.verified) {
+            return util.buildResponse(401, verification);
+        }
+
+        return util.buildResponse(200, {
+            verified: true,
+            message: 'Success'
+            // Consider removing sensitive information like 'user' and 'token' from the response
+        });
+    } catch (error) {
+        // Log the error for debugging
+        console.error(error);
+        // Return a generic 500 error response
+        return util.buildResponse(500, {
+            verified: false,
+            message: 'Internal server error'
+        });
     }
-    return util.buildResponse(200, {
-        verified:true,
-        message: 'success',
-        user:user,
-        token:token
-    })
-
 }
-module.exports.verify =verify
+
+module.exports.verify = verify;
