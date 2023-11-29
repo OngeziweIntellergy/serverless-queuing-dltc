@@ -1,0 +1,1 @@
+const heo="hegy";
