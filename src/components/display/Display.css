@@ -2,6 +2,8 @@
 .container-fluid {
   margin-top: 20px;
   background-color: #f9f9f9;
+  height: 90dvh;
+  width: 95dvw;
 }
 .headerDisplay{
   background-color: #9d8b57;
@@ -147,7 +149,37 @@ body {
 }
 
 .upcoming-task {
+  border-left: 4px solid orange;
   
   /* Optional: Style for upcoming tasks if you want them to look different */
 }
 
+.card-display {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr); /* Creates four columns with equal width */
+  grid-template-columns: repeat(2, 1fr); /* Creates four columns with equal width */
+  grid-gap: 10px; /* Space between grid items */
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  height: 250px; /* Adjust the height as needed */
+}
+
+.card-display-ticket-item {
+  background-color: #004990;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: white;
+  /* You can add a fixed width or use the width from the grid */
+}
+.card-display-ticket-item > p{ color: #f5f5f5;}
+
+/* Responsive Design: Adjust the number of columns on smaller screens */
+@media (max-width: 768px) {
+  .card-display {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+  }
+}

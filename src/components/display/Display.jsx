@@ -65,15 +65,22 @@ const KanbanColumn = ({ column, servingTasks, queueTasks }) => {
         <div className="card-body d-flex flex-column">
           <div className="serving-section mb-3 p-2">
             <h4 className="text-uppercase text-tertiary">Serving</h4>
-            {servingTasks.map((task, index) => (
+            <div className='card-display'>
+             {servingTasks.map((task, index) => (
                 <KanbanTask key={index} task={task} isServing={true} />
-            ))}
+            ))} 
+            </div>
           </div>
           <div className="upcoming-section flex-grow-1 p-2">
-            <h4 className="text-uppercase text-warning">Upcoming Tickets</h4>
-            {queueTasks.map((task, index) => (
+            <h4 className="text-uppercase text-warning">Upcoming </h4>
+              <div className='card-display'>
+              {queueTasks.map((task, index) => (
+                  <KanbanTask key={index} task={task} isServing={false} />
+              ))} 
+              </div>
+            {/* {queueTasks.map((task, index) => (
                 <KanbanTask key={index} task={task} isServing={false} />
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
@@ -83,15 +90,20 @@ const KanbanColumn = ({ column, servingTasks, queueTasks }) => {
 
 const KanbanTask = ({ task, isServing }) => {
   return (
-    <div className={`card mb-2 ${isServing ? "serving-task" : "upcoming-task"}`}>
-      <div className="card-body">
-        <div className="d-flex justify-content-center align-items-center ticket-color">
-          <p className="ticket-number badge badge-pill badge-success">
-            <span className='color-change'>{task.ticket_number}</span>
-          </p>
-        </div>
+    
+      <div className={`card-display-ticket-item ${isServing ? "serving-task" : "upcoming-task"}`}>
+        <p>{task.ticket_number}</p>
       </div>
-    </div>
+           
+    // <div className={`card mb-2 ${isServing ? "serving-task" : "upcoming-task"}`}>
+    //   <div className="card-body">
+    //     <div className="d-flex justify-content-center align-items-center ticket-color">
+    //       <p className="ticket-number badge badge-pill badge-success">
+    //         <span className='color-change'>{task.ticket_number}</span>
+    //       </p>
+    //     </div>
+    //   </div>
+    // </div>
   );
 };
 
