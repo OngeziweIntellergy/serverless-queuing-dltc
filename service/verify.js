@@ -20,7 +20,9 @@ function verify(requestBody) {
 
         return util.buildResponse(200, {
             verified: true,
-            message: 'Success'
+            message: 'Success', 
+            user: user,
+            token:token
             // Consider removing sensitive information like 'user' and 'token' from the response
         });
     } catch (error) {
