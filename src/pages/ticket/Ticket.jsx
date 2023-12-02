@@ -8,8 +8,11 @@ const Ticket = () => {
   const [reason, setReason] = useState('');
   const [numberInQueue, setNumberInQueue] = useState(0);
   const [estimatedServiceTime, setEstimatedServiceTime] = useState('');
+  const [staticEstimatedTime, setStaticEstimatedTime] = useState('');
+
   const [serviceTime, setServiceTime] = useState(0);
   const [timer, setTimer] = useState(null);
+  let estime;
 
   const calculateNumberInQueue = useCallback(async (dateTime, option) => {
     try {
@@ -22,6 +25,8 @@ const Ticket = () => {
       Swal.fire("Error", "Error fetching tickets: " + error.message, "error");
     }
   }, []);
+
+  
 
   useEffect(() => {
     const updateQueue = async () => {
@@ -100,15 +105,21 @@ const Ticket = () => {
     return count +1;
   };
 
+
   const calculateEstimatedServiceTime = (numberBefore) => {
-    const averageWaitTimePerPerson = 15;
-    const totalWaitTime = numberBefore * averageWaitTimePerPerson;
-
-    const currentTime = new Date();
-    currentTime.setMinutes(currentTime.getMinutes() + totalWaitTime);
-
-    setEstimatedServiceTime(currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit', hour24: true }));
+    if (staticEstimatedTime === '') {
+      const averageWaitTimePerPerson = 15;
+      const totalWaitTime = numberBefore * averageWaitTimePerPerson;
+  
+      const currentTime = new Date();
+      currentTime.setMinutes(currentTime.getMinutes() + totalWaitTime);
+  
+      const newEstimatedTime = currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit', hour24: true });
+      setEstimatedServiceTime(newEstimatedTime);
+      setStaticEstimatedTime(newEstimatedTime);
+    }
   };
+  
 
   const queueMessage = () => {
     if (numberInQueue === 1) {
@@ -137,7 +148,7 @@ const Ticket = () => {
         <div className="ticket-number-container">
           <p className="ticket-number">Ticket NO: <span className='ticket-number-color'>{ticketNumber}</span></p>
           <p>Number in Queue: <span className='ticket-number-color-fontSize'>{queueMessage()}</span></p>
-          <p>Estimated Service Time: <span className='ticket-number-color-fontSize'>{estimatedServiceTime}</span></p>
+          <p>Estimated Service Time: <span className='ticket-number-color-fontSize'>{staticEstimatedTime}</span></p>
           <p>Reason for visit: <span className='ticket-number-color-bold'>{reason}</span></p>
         </div>
       </div>

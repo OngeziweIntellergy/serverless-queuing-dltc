@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
-import Agent from './components/agent/Agent';
-import Display from './components/display/Display';
-import Reason from './components/reason/Reason';
-import Ticket from './components/ticket/Ticket';
-import Login from './components/login/Login';
-import User from './components/user/user';
+import Agent from './pages/agent/Agent';
+import Display from './pages/display/Display';
+import Reason from './pages/reason/Reason';
+import Ticket from './pages/ticket/Ticket';
+import Login from './pages/login/Login';
+import User from './pages/user/user';
 
 
 function App() {
