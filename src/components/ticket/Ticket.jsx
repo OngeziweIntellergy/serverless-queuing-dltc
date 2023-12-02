@@ -113,7 +113,6 @@ const Ticket = () => {
   const queueMessage = () => {
     if (numberInQueue === 1) {
       console.log(numberInQueue)
-
       return "Move closer, you're next in line!";
     } else if (numberInQueue === 2) {
       console.log(numberInQueue)
