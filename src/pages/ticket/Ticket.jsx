@@ -15,14 +15,14 @@ const Ticket = () => {
 
   const [ticketId, setTicketId] = useState('');
 
-const findTicketId = (tickets, dateTime, option) => {
-  const ticket = tickets.find(ticket => 
-    new Date(ticket.datetime).toISOString() === dateTime && 
-    ticket.option === option
-  );
-  
-  return ticket ? ticket.id : null;
-};
+// const findTicketId = (tickets, dateTime, option) => {
+//   const ticket = tickets.find(ticket => 
+//     new Date(ticket.datetime).toISOString() === dateTime && 
+//     ticket.option === option
+//   );
+//   // console.log()
+//   return ticket ? ticket.ticket_number : null;
+// };
 
 const calculateNumberInQueue = useCallback(async (dateTime, option) => {
   try {
@@ -32,7 +32,6 @@ const calculateNumberInQueue = useCallback(async (dateTime, option) => {
     const foundTicketId = findTicketId(tickets, dateTime, option);
     setNumberInQueue(numberBefore);
     setTicketId(foundTicketId);
-    console.log(ticketId)
     calculateEstimatedServiceTime(numberBefore);
   } catch (error) {
     Swal.fire("Error", "Error fetching tickets: " + error.message, "error");
@@ -126,15 +125,44 @@ const calculateNumberInQueue = useCallback(async (dateTime, option) => {
     }
   };
 
-  const countTicketsBefore = (tickets, currentTicketDateTime, option) => {
-    const count = tickets.filter(ticket => 
-      new Date(ticket.datetime) < new Date(currentTicketDateTime) &&
-      ticket.option === option &&
-      ticket.state === 'in Queue'
-    ).length;
+  // const countTicketsBefore = (tickets, currentTicketDateTime, option) => {
+  //   const count = tickets.filter(ticket => 
+  //     new Date(ticket.datetime) < new Date(currentTicketDateTime) &&
+  //     ticket.option === option &&
+  //     ticket.state === 'in Queue'
+  //   ).length;
 
-    return count +1;
+  //   return count +1;
+  // };
+
+  const findTicketId = (tickets, dateTime, option) => {
+    try {
+      const ticket = tickets.find(ticket => 
+        new Date(ticket.datetime).toISOString() === dateTime && 
+        ticket.option === option
+      );
+      return ticket ? ticket.ticket_number : null;
+    } catch (error) {
+      console.error("Error finding ticket:", error);
+      return null;
+    }
   };
+  
+  const countTicketsBefore = (tickets, currentTicketDateTime, option) => {
+    try {
+      const count = tickets.filter(ticket => 
+        new Date(ticket.datetime) < new Date(currentTicketDateTime) &&
+        ticket.option === option &&
+        ticket.state === 'in Queue'
+      ).length;
+  
+      return count + 1;
+    } catch (error) {
+      console.error("Error counting tickets:", error);
+      return 0;
+    }
+  };
+  
 
   const calculateEstimatedServiceTime = (numberBefore) => {
     if (staticEstimatedTime === '') {
@@ -159,7 +187,7 @@ const calculateNumberInQueue = useCallback(async (dateTime, option) => {
       return "Move closer, you're second in line!";
     } else if(numberInQueue === 0){
       console.log(numberInQueue)
-      return "Currently serving";
+      return "---";
     } else {
       return <span className='ticket-number-color-fontSize'>{numberInQueue}</span>;
     }
