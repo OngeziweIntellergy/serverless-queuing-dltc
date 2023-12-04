@@ -34,7 +34,7 @@ function Agent() {
                     ...ticket,
                     state: ticket.state,  
                     ticketNumber: ticket.ticket_number,
-                    ticket_id: ticket.ticket_id
+                    // ticket_id: ticket.ticket_id
                 }));
                 setTickets(processedTickets);
                
@@ -71,11 +71,11 @@ function Agent() {
     const handleSignOut = () => {
         window.location.href = 'https://frontend.d17g06z7kjqaor.amplifyapp.com/login';
     };
-    const handleAction = async (id, action) => {
-        let updatedTickets = [...tickets];
-        updateTicketState(id,action)
-        
+  
 
+    const handleAction = async (ticketNumber, action) => {
+        let updatedTickets = [...tickets];
+        
         if (action === 'Serving') {
             const currentlyServingTicket = updatedTickets.find(ticket => ticket.state === 'Serving');
         
@@ -83,33 +83,30 @@ function Agent() {
             if (currentlyServingTicket) {
                 const updatedServingTicket = { ...currentlyServingTicket, state: 'Done' };
                 updatedTickets = updatedTickets.map(ticket => 
-                    ticket.ticket_id === currentlyServingTicket.ticket_id ? updatedServingTicket : ticket
+                    ticket.state === 'Serving' ? updatedServingTicket : ticket
                 );
-                 updateTicketState(currentlyServingTicket.ticket_id, 'Done');
+                await updateTicketState('Done', currentlyServingTicket.ticket_number);
             }
-
+        
             // Set the selected ticket to 'Serving'
             updatedTickets = updatedTickets.map(ticket =>
-                ticket.ticket_id === id ? { ...ticket, state: 'Done' } : ticket
+                ticket.ticket_number === ticketNumber ? { ...ticket, state: 'Serving' } : ticket
             );
-            const ticketBeingServed = updatedTickets.find(ticket => ticket.ticket_id === id);
+            const ticketBeingServed = updatedTickets.find(ticket => ticket.ticket_number === ticketNumber);
             if (ticketBeingServed) {
-                const ticketNumber = ticketBeingServed.ticketNumber;
-                
                 speakText(`Now serving ticket number ${ticketNumber} at station number 1.`);
             }
         } else {
-            // Handle other actions (Cancel, Done, Reinstate)
+          
             updatedTickets = updatedTickets.map(ticket => {
-                if (ticket.ticket_id === id) {
+                if (ticket.ticket_number === ticketNumber) {
                     return { ...ticket, state: action };
                 }
                 return ticket;
             });
         }
-
-        if (action === 'Cancel') {
-            const ticketToCancel = updatedTickets.find(ticket => ticket.ticket_id === id);
+             if (action === 'Cancel') {
+            const ticketToCancel = updatedTickets.find(ticket => ticket.ticket_number === ticketNumber);
             if (ticketToCancel && ticketToCancel.state === 'Serving') {
                 const result = await Swal.fire({
                     title: 'Cancel Ticket',
@@ -133,9 +130,9 @@ function Agent() {
 
         if (action === 'in Queue') {
             // Remove the ticket from its current position
-            updatedTickets = updatedTickets.filter(ticket => ticket.ticket_id !== id);
+            updatedTickets = updatedTickets.filter(ticket => ticket.ticket_number !== ticketNumber);
             // Add it back to the start of the queue with state 'in Queue'
-            updatedTickets.unshift({ ...tickets.find(ticket => ticket.ticket_id === id), state: 'in Queue' });
+            updatedTickets.unshift({ ...tickets.find(ticket => ticket.ticket_number === ticketNumber), state: 'in Queue' });
         } else if (action === 'Serving') {
             // Find and move the currently serving ticket to 'Done', if any
             updatedTickets = updatedTickets.map(ticket => 
@@ -143,30 +140,32 @@ function Agent() {
             );
             // Set the selected ticket to 'Serving'
             updatedTickets = updatedTickets.map(ticket => 
-                ticket.ticket_id === id ? { ...ticket, state: 'Serving' } : ticket
+                ticket.ticket_number === ticketNumber ? { ...ticket, state: 'Serving' } : ticket
             );
         } else {
             // Handle other actions (Cancel, Done)
             updatedTickets = updatedTickets.map(ticket => {
-                if (ticket.ticket_id === id) {
+                if (ticket.ticket_number === ticketNumber) {
                     return { ...ticket, state: action };
                 }
                 return ticket;
             });
         }
-
+    
         setTickets(updatedTickets);
         updateCounters();
-        await updateTicketState(id, action);
+        await updateTicketState(action, ticketNumber );
     };
+    
 
     
 
-    const updateTicketState = async (id, newState) => {
+    const updateTicketState = async (newState, ticketNumber) => {
+        console.log(newState)
        
         try {
-            const response = await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, { state: newState, ticket_id: id });
-            
+            const response = await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, { state: newState, ticket_number: ticketNumber });
+            console.log(response)
             return response.data;
         } catch (error) {
             console.error("Error updating ticket:", error);
@@ -200,7 +199,7 @@ function Agent() {
                     <div className="list-group">
                         {filteredTickets.map(ticket => (
                             <button
-                                key={ticket.ticket_id}
+                                key={ticket.ticket_number}
                                 className="list-group-item list-group-item-action"
                                 onClick={() => handleTicketSelect(ticket)}
                             >
@@ -227,20 +226,20 @@ function Agent() {
                         <h2>{section}</h2>
                         <div className="d-flex flex-wrap">
                             {tickets.filter(ticket => ticket.state === section).map(ticket => (
-                                <div className='card m-2' style={{ width: '18rem' }} key={ticket.ticket_id}>
+                                <div className='card m-2' style={{ width: '18rem' }} key={ticket.ticket_number}>
                                     <div className='card-body'>
                                         <h5 className='card-title'>Ticket NO {ticket.ticketNumber}</h5>
                                         <div className="d-flex justify-content-between">
                                             {section === 'Cancel' ? (
-                                                <button className='btn btn-primary' onClick={() => handleAction(ticket.ticket_id, 'in Queue')}>Reinstate</button>
+                                                <button className='btn btn-primary' onClick={() => handleAction(ticket.ticket_number, 'in Queue')}>Reinstate</button>
                                             ) : (
-                                                <button className='btn btn-danger' onClick={() => handleAction(ticket.ticket_id, 'Cancel')}>Cancel</button>
+                                                <button className='btn btn-danger' onClick={() => handleAction(ticket.ticket_number, 'Cancel')}>Cancel</button>
                                             )}
                                             {ticket.state === 'in Queue' && (
-                                                <button className='btn btn-success' onClick={() => handleAction(ticket.ticket_id, 'Serving')}>Serve</button>
+                                                <button className='btn btn-success' onClick={() => handleAction(ticket.ticket_number, 'Serving')}>Serve</button>
                                             )}
                                             {section === 'Done' && (
-                                                <button className='btn btn-info' onClick={() => handleReview(ticket.ticketNumber)}>Review</button>
+                                                <button className='btn btn-info' onClick={() => handleReview(ticket.ticket_number)}>Review</button>
                                             )}
                                         </div>
                                     </div>

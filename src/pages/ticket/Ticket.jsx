@@ -12,19 +12,32 @@ const Ticket = () => {
 
   const [serviceTime, setServiceTime] = useState(0);
   const [timer, setTimer] = useState(null);
-  let estime;
 
-  const calculateNumberInQueue = useCallback(async (dateTime, option) => {
-    try {
-      const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
-      const tickets = response.data;
-      const numberBefore = countTicketsBefore(tickets, dateTime, option);
-      setNumberInQueue(numberBefore);
-      calculateEstimatedServiceTime(numberBefore);
-    } catch (error) {
-      Swal.fire("Error", "Error fetching tickets: " + error.message, "error");
-    }
-  }, []);
+  const [ticketId, setTicketId] = useState('');
+
+const findTicketId = (tickets, dateTime, option) => {
+  const ticket = tickets.find(ticket => 
+    new Date(ticket.datetime).toISOString() === dateTime && 
+    ticket.option === option
+  );
+  
+  return ticket ? ticket.id : null;
+};
+
+const calculateNumberInQueue = useCallback(async (dateTime, option) => {
+  try {
+    const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
+    const tickets = response.data;
+    const numberBefore = countTicketsBefore(tickets, dateTime, option);
+    const foundTicketId = findTicketId(tickets, dateTime, option);
+    setNumberInQueue(numberBefore);
+    setTicketId(foundTicketId);
+    console.log(ticketId)
+    calculateEstimatedServiceTime(numberBefore);
+  } catch (error) {
+    Swal.fire("Error", "Error fetching tickets: " + error.message, "error");
+  }
+}, []);
 
   
 
@@ -78,12 +91,30 @@ const Ticket = () => {
   useEffect(() => {
     if (numberInQueue === 1 && !timer) {
       startServiceTimer();
-      console.log(numberInQueue)
-      console.log(startServiceTimer())
+      Swal.fire({
+        title: 'Rate Our Service',
+        text: 'Please rate the service you received.',
+        icon: 'question',
+        input: 'range',
+        inputAttributes: {
+          min: 1,
+          max: 5,
+          step: 1
+        },
+        inputLabel: 'Rating',
+        confirmButtonText: 'Submit'
+      }).then(result => {
+        if (result.value) {
+          updateTicketWithTimeAndRating(serviceTime, result.value);
+          setServiceTime(0);
+        }
+      });
     } else if (numberInQueue < 1 && timer) {
       stopServiceTimer();
     }
   }, [numberInQueue, timer, startServiceTimer, stopServiceTimer]);
+  
+ 
   const updateTicketWithTimeAndRating = async (time, rating) => {
     try {
       await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, {
@@ -105,15 +136,12 @@ const Ticket = () => {
     return count +1;
   };
 
-
   const calculateEstimatedServiceTime = (numberBefore) => {
     if (staticEstimatedTime === '') {
       const averageWaitTimePerPerson = 15;
       const totalWaitTime = numberBefore * averageWaitTimePerPerson;
-  
       const currentTime = new Date();
-      currentTime.setMinutes(currentTime.getMinutes() + totalWaitTime);
-  
+      currentTime.setMinutes(currentTime.getMinutes() + totalWaitTime); 
       const newEstimatedTime = currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit', hour24: true });
       setEstimatedServiceTime(newEstimatedTime);
       setStaticEstimatedTime(newEstimatedTime);
