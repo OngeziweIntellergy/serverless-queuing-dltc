@@ -71,27 +71,27 @@ function Agent() {
     const handleSignOut = () => {
         window.location.href = 'https://frontend.d17g06z7kjqaor.amplifyapp.com/login';
     };
-  
 
     const handleAction = async (ticketNumber, action) => {
         let updatedTickets = [...tickets];
-        
+    
         if (action === 'Serving') {
             const currentlyServingTicket = updatedTickets.find(ticket => ticket.state === 'Serving');
-        
-            // If there's a ticket being served, move it to 'Done'
+    
+            // Move the currently serving ticket to 'Done'
             if (currentlyServingTicket) {
-                const updatedServingTicket = { ...currentlyServingTicket, state: 'Done' };
+                console.log(currentlyServingTicket)
                 updatedTickets = updatedTickets.map(ticket => 
-                    ticket.state === 'Serving' ? updatedServingTicket : ticket
+                    ticket.state === 'Serving' ? { ...ticket, state: 'Done' } : ticket
                 );
                 await updateTicketState('Done', currentlyServingTicket.ticket_number);
             }
-        
+    
             // Set the selected ticket to 'Serving'
             updatedTickets = updatedTickets.map(ticket =>
                 ticket.ticket_number === ticketNumber ? { ...ticket, state: 'Serving' } : ticket
             );
+    
             const ticketBeingServed = updatedTickets.find(ticket => ticket.ticket_number === ticketNumber);
             if (ticketBeingServed) {
                 speakText(`Now serving ticket number ${ticketNumber} at station number 1.`);
@@ -151,7 +151,6 @@ function Agent() {
                 return ticket;
             });
         }
-    
         setTickets(updatedTickets);
         updateCounters();
         await updateTicketState(action, ticketNumber );
@@ -161,15 +160,19 @@ function Agent() {
     
 
     const updateTicketState = async (newState, ticketNumber) => {
-        console.log(newState)
-       
+        console.log('Updating ticket state:', newState, 'Ticket number:', ticketNumber);
+    
         try {
-            const response = await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, { state: newState, ticket_number: ticketNumber });
-            console.log(response)
+            const response = await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, {
+                ticket_number: ticketNumber,
+                state: newState
+                
+            });
+            console.log('Update response:', response);
             return response.data;
         } catch (error) {
             console.error("Error updating ticket:", error);
-
+            throw error; // Rethrow the error to handle it further if needed
         }
     };
 
