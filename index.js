@@ -2,11 +2,19 @@ const registerService = require('./service/register');
 const loginService = require('./service/login');
 const verifyService = require('./service/verify');
 const util = require('./utils/utils');
+// const cors = require('cors')
+// const corsOptions ={
+//   origin:'*', 
+//   credentials:true,            //access-control-allow-credentials:true
+//   optionSuccessStatus:200
+// }
 
 const healthPath = '/health';
 const registerPath = '/register';
 const loginPath = '/login';
 const verifyPath = '/verify';
+
+// app.use(cors(corsOptions));
 
 module.exports.handler = async (event) => {
   console.log('request event', event);
