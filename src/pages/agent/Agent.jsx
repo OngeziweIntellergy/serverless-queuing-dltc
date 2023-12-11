@@ -11,15 +11,52 @@ function Agent() {
     const [doneCount, setDoneCount] = useState(0);
 
     // // Text-to-Speech Function
-    const speakText = (text) => {
-        if ('speechSynthesis' in window) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.85; // Adjust the rate as needed, 0.75 for slower speech
+    // const speakText = (text) => {
+    //     if ('speechSynthesis' in window) {
+    //         const utterance = new SpeechSynthesisUtterance(text);
+    //         utterance.rate = 0.85; // Adjust the rate as needed, 0.75 for slower speech
+    //         window.speechSynthesis.speak(utterance);
+    //     } else {
+    //         console.error("Your browser does not support text-to-speech.");
+    //     }
+    // };
+
+    // Text-to-Speech Function with Female Voice
+   
+  const speakText = (text) => {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.2; // Adjust the rate as needed
+
+        const chooseVoice = () => {
+            let voices = window.speechSynthesis.getVoices();
+            
+            // Try to find a female voice by name or other attributes
+            let femaleVoice = voices.find(voice => voice.name.toLowerCase().includes("female") || voice.lang.startsWith("en-"));
+
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            } else {
+                console.warn("No explicitly female voice available. Using default.");
+            }
+
             window.speechSynthesis.speak(utterance);
+        };
+
+        if (window.speechSynthesis.getVoices().length > 0) {
+            chooseVoice();
         } else {
-            console.error("Your browser does not support text-to-speech.");
+            window.speechSynthesis.onvoiceschanged = chooseVoice;
         }
-    };
+    } else {
+        console.error("Your browser does not support text-to-speech.");
+    }
+};
+
+// Ensuring voices are loaded
+window.speechSynthesis.onvoiceschanged = () => {
+    speakText("Test speech");
+};
 
     useEffect(() => {
         const fetchData = async () => {
