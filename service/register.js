@@ -8,7 +8,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 const userTable = "examiners";
 
 async function register(userInfo) {
-    const { name, email, username, station, userRole, password } = userInfo;
+    const { name, email, username, station,option, userRole, password } = userInfo;
 
     if (!username || !name || !password) {
         return util.buildResponse(400, {
@@ -30,6 +30,7 @@ async function register(userInfo) {
             email,
             username: username.toLowerCase().trim(),
             station,
+            option,
             userRole,
             password: encryptedPw
         };
