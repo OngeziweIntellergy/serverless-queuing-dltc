@@ -2,18 +2,22 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Display.css';
+import {AudioOutput} from '../../service/AudioOutput';
 
 const Display = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [tasks, setTasks] = useState({ serving: [], queue: [] });
 
   useEffect(() => {
+    
     setIsLoading(true);
     const fetchOptions = async () => {
       try {
         const result = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
         
         const servingTasks = result.data.filter(task => task.state === 'Serving');
+        await AudioOutput("Helllo this is true")
+        
         const queueTasks = result.data.filter(task => task.state === 'in Queue');
         
         setTasks({ serving: servingTasks, queue: queueTasks });
