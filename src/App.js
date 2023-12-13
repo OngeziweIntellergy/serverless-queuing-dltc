@@ -7,8 +7,11 @@ import Reason from './pages/reason/Reason';
 import Ticket from './pages/ticket/Ticket';
 import Login from './pages/login/Login';
 import User from './pages/user/user';
+<<<<<<< HEAD
 import Register from './pages/register/Register';
 import WaitingArea from './pages/waitingarea/WaitingArea';
+=======
+>>>>>>> 1ccb1931e79ded20b6e1a648859e48f1cfae30ba
 
 
 function App() {
@@ -26,6 +29,8 @@ function App() {
           <Route path="/waitingarea" element={<WaitingArea />} />
           <Route path="/user" element={<User />} />
           <Route path="*" element={<Display />} /> 
+          <Route path="/dashboard" element={<Dashboard />} />
+          
         </Routes>
       </div>
     </Router>

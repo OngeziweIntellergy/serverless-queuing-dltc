@@ -1,0 +1,31 @@
+/* Dashboard.css */
+.dashboard-container {
+  display: flex;
+}
+
+.side-panel {
+  width: 200px; /* Set the width for the side panel */
+  background-color: #87CEFA; /* Set a background color for the side panel */
+  color: gold; /* Set text color for the side panel */
+  height: 100vh; /* Full height */
+}
+
+.dashboard {
+  flex-grow: 1; /* Dashboard content will fill the rest of the horizontal space */
+  display: flex; /* Align children (header and cards) in a column */
+  flex-direction: column; /* Stack children vertically */
+  padding: 20px; /* Add padding for aesthetics */
+}
+
+.dashboard-header {
+  font-size: 24px;
+  margin-bottom: 20px; /* Add space below the header */
+}
+
+.dashboard-cards {
+  display: flex; /* Arrange card components in a row */
+  gap: 20px; /* Space between cards */
+}
+
+/* Continue with the rest of your dashboard styles */
+/* Add any additional styles for the card components if needed */

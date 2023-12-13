@@ -1,0 +1,20 @@
+/* Card.css */
+.card {
+    background-color: #8bc34a;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    width: 150px;
+    text-align: center;
+  }
+  
+  .card-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .card-number {
+    font-size: 36px;
+    font-weight: bold;
+  }
+  
