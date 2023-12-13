@@ -7,7 +7,6 @@ import Reason from './pages/reason/Reason';
 import Ticket from './pages/ticket/Ticket';
 import Login from './pages/login/Login';
 import User from './pages/user/user';
-import Register from './pages/register/Register';
 
 
 function App() {
@@ -24,6 +23,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/user" element={<User />} />
           <Route path="*" element={<Display />} /> 
+          <Route path="/dashboard" element={<Dashboard />} />
+          
         </Routes>
       </div>
     </Router>
