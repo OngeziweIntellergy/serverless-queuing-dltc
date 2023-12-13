@@ -1,0 +1,79 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif; /* You can choose your preferred font */
+}
+
+.waiting-area {
+  display: flex;
+  top: 0;
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  position: absolute;
+  background: #f0f0f3; /* Soft background */
+  align-items: center;
+  justify-content: center;
+}
+
+.waiting-area-left  {
+  
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border-radius: 20px;
+  background: #f0f0f3;
+  
+}
+.waiting-area-right{
+  margin-right:2%;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border-radius: 20px;
+  background: #f0f0f3;
+  box-shadow: -5px -5px 10px #fff, 5px 5px 15px rgba(174, 174, 192, 0.4);
+}
+
+.ticket-number {
+  font-size: 400px; /* Adjusted for better readability */
+  color: #004990; 
+  margin: 0;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+.service-station {
+  color: #555;
+  font-size: 24px;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.waiting-ticket-side {
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  border-left: 5px solid #004990  ;
+  box-shadow: inset -2px -2px 5px #fff, inset 2px 2px 5px rgba(174, 174, 192, 0.6);
+}
+
+.waiting-ticket-side > p {
+  font-size: 80px; /* Adjusted for better readability */
+  color: #333;
+}
+.text-color{
+  color:#004990;
+  font-size: 40px;
+}

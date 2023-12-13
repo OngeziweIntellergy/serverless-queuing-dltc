@@ -15,14 +15,7 @@ const Ticket = () => {
 
   const [ticketId, setTicketId] = useState('');
 
-// const findTicketId = (tickets, dateTime, option) => {
-//   const ticket = tickets.find(ticket => 
-//     new Date(ticket.datetime).toISOString() === dateTime && 
-//     ticket.option === option
-//   );
-//   // console.log()
-//   return ticket ? ticket.ticket_number : null;
-// };
+
 
 const calculateNumberInQueue = useCallback(async (dateTime, option) => {
   try {
@@ -124,16 +117,6 @@ const calculateNumberInQueue = useCallback(async (dateTime, option) => {
       Swal.fire("Error", "Error updating ticket: " + error.message, "error");
     }
   };
-
-  // const countTicketsBefore = (tickets, currentTicketDateTime, option) => {
-  //   const count = tickets.filter(ticket => 
-  //     new Date(ticket.datetime) < new Date(currentTicketDateTime) &&
-  //     ticket.option === option &&
-  //     ticket.state === 'in Queue'
-  //   ).length;
-
-  //   return count +1;
-  // };
 
   const findTicketId = (tickets, dateTime, option) => {
     try {

@@ -8,6 +8,7 @@ import Ticket from './pages/ticket/Ticket';
 import Login from './pages/login/Login';
 import User from './pages/user/user';
 import Register from './pages/register/Register';
+import WaitingArea from './pages/waitingarea/WaitingArea';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/agent" element={<Agent />} />
           <Route path="/ticket" element={<Ticket />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/waitingarea" element={<WaitingArea />} />
           <Route path="/user" element={<User />} />
           <Route path="*" element={<Display />} /> 
         </Routes>

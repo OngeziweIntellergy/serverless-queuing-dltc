@@ -10,7 +10,7 @@ function Register() {
   const [selectedValue, setSelectedValue] = useState('');
   const [reason, setReason] = useState({
     Professional_Driving_Permit: false,
-    Diver_Renewal_License: false,
+    Driver_Renewal_License: false,
     Motor_Vehicle_License: false,
     Operating_License: false,
     checkAll: false,
@@ -57,7 +57,6 @@ function Register() {
       option: reason,
       station: selectedValue,
       userRole: "admin"
-
     }
     axios.post(registerUrl, requestBody, requestConfig).then(response=>{
       console.log(response)}).catch(error=>{
@@ -83,10 +82,11 @@ function Register() {
             Choose an option:
             <select value={selectedValue} onChange={event=>setSelectedValue(event.target.value)}>
                 <option value="1"> 1</option>
-                <option value="1"> 2</option>
-                <option value="1"> 3</option>
+                <option value="2"> 2</option>
+                <option value="3"> 3</option>
             </select>
         </label>
+        
         <label>
         Check All
         <input
@@ -111,8 +111,8 @@ function Register() {
       Diver Renewal License
         <input
           type="checkbox"
-          name="Diver Renewal License"
-          checked={reason.Diver_Renewal_License}
+          name="Driver_Renewal_License"
+          checked={reason.Driver_Renewal_License}
           onChange={handleChange}
         />
       </label>
