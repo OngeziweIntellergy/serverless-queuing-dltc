@@ -34,11 +34,9 @@ function Login() {
     }
     const requestBody ={
       username:username,
-      password:password 
+      password:password,  
     }
-    const updateBody ={
-      station: reason
-    }
+  
     axios.post(loginUrl, requestBody, requestConfig).then(response=>{
       setUserSession(response.data.user, response.data.token)
       showOptions();
@@ -59,6 +57,10 @@ function Login() {
       title: 'Select Options',
       html: `
         <div style="text-align: left;">
+        <label>
+            <input type="checkbox" id="checkAll" class="check-all">
+            Check All
+          </label><br>
           <label>
             <input type="checkbox" id="Professional_Driving_Permit">
             Professional Driving Permit
@@ -79,10 +81,7 @@ function Login() {
             Operating License
           </label><br>
 
-          <label>
-            <input type="checkbox" id="checkAll" class="check-all">
-            Check All
-          </label>
+          
         </div>
       `,
       didOpen: () => {

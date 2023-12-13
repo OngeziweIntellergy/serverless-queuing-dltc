@@ -7,6 +7,7 @@ function Register() {
   const [email, setEmail]= useState('');
   const [password, setPassword]= useState('');
   const [username, setUsername]= useState('');
+  const [selectedValue, setSelectedValue] = useState('');
   const [reason, setReason] = useState({
     Professional_Driving_Permit: false,
     Diver_Renewal_License: false,
@@ -53,17 +54,19 @@ function Register() {
       username:username,
       email:email,
       password:password, 
-      station: reason,
+      option: reason,
+      station: selectedValue,
       userRole: "admin"
 
     }
     axios.post(registerUrl, requestBody, requestConfig).then(response=>{
       console.log(response)}).catch(error=>{
-        if(error.response.status === 400){
-          console.log(error.response.data.message)
-        }else{
-          console.log("server error.")
-        }
+        console.log(error)
+        // if(error.response){
+        //   console.log(error.response.data.message)
+        // }else{
+        //   console.log("server error.")
+        // }
 
     })
   }
@@ -76,6 +79,14 @@ function Register() {
         Username : <input type="text" value={username} onChange={event=>setUsername(event.target.value)} required/>
         email : <input type="email" value={email} onChange={event=>setEmail(event.target.value)} required/>
         Password : <input type="password" value={password} onChange={event=>setPassword(event.target.value)} required/>
+      <label>
+            Choose an option:
+            <select value={selectedValue} onChange={event=>setSelectedValue(event.target.value)}>
+                <option value="1"> 1</option>
+                <option value="1"> 2</option>
+                <option value="1"> 3</option>
+            </select>
+        </label>
         <label>
         Check All
         <input

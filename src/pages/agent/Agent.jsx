@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
-import "./Agent.css"; 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./Agent.css";
 
 function Agent() {
     const [tickets, setTickets] = useState([]);
@@ -10,53 +10,36 @@ function Agent() {
     const [servedCount, setServedCount] = useState(0);
     const [doneCount, setDoneCount] = useState(0);
 
-    // // Text-to-Speech Function
-    // const speakText = (text) => {
-    //     if ('speechSynthesis' in window) {
-    //         const utterance = new SpeechSynthesisUtterance(text);
-    //         utterance.rate = 0.85; // Adjust the rate as needed, 0.75 for slower speech
-    //         window.speechSynthesis.speak(utterance);
-    //     } else {
-    //         console.error("Your browser does not support text-to-speech.");
-    //     }
-    // };
-
     // Text-to-Speech Function with Female Voice
-   
-  const speakText = (text) => {
-    if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 1.2; // Adjust the rate as needed
-
-        const chooseVoice = () => {
-            let voices = window.speechSynthesis.getVoices();
-            
-            // Try to find a female voice by name or other attributes
-            let femaleVoice = voices.find(voice => voice.name.toLowerCase().includes("female") || voice.lang.startsWith("en-"));
-
-            if (femaleVoice) {
-                utterance.voice = femaleVoice;
+    const speakText = (text) => {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.2; // Adjust the rate as needed
+    
+            const chooseVoice = () => {
+                let voices = window.speechSynthesis.getVoices();
+                
+                // Filter for female voices
+                let femaleVoices = voices.filter(voice => voice.name.toLowerCase().includes("female"));
+    
+                if (femaleVoices.length > 0) {
+                    // Choose the first available female voice
+                    utterance.voice = femaleVoices[0];
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    console.warn("No female voice available. Speech synthesis not performed.");
+                }
+            };
+    
+            if (window.speechSynthesis.getVoices().length > 0) {
+                chooseVoice();
             } else {
-                console.warn("No explicitly female voice available. Using default.");
+                window.speechSynthesis.onvoiceschanged = chooseVoice;
             }
-
-            window.speechSynthesis.speak(utterance);
-        };
-
-        if (window.speechSynthesis.getVoices().length > 0) {
-            chooseVoice();
         } else {
-            window.speechSynthesis.onvoiceschanged = chooseVoice;
+            console.error("Your browser does not support text-to-speech.");
         }
-    } else {
-        console.error("Your browser does not support text-to-speech.");
-    }
-};
-
-// Ensuring voices are loaded
-window.speechSynthesis.onvoiceschanged = () => {
-    speakText("Test speech");
-};
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -71,7 +54,6 @@ window.speechSynthesis.onvoiceschanged = () => {
                     ...ticket,
                     state: ticket.state,  
                     ticketNumber: ticket.ticket_number,
-                    // ticket_id: ticket.ticket_id
                 }));
                 setTickets(processedTickets);
                
@@ -115,26 +97,22 @@ window.speechSynthesis.onvoiceschanged = () => {
         if (action === 'Serving') {
             const currentlyServingTicket = updatedTickets.find(ticket => ticket.state === 'Serving');
     
-            // Move the currently serving ticket to 'Done'
             if (currentlyServingTicket) {
-                console.log(currentlyServingTicket)
                 updatedTickets = updatedTickets.map(ticket => 
                     ticket.state === 'Serving' ? { ...ticket, state: 'Done' } : ticket
                 );
                 await updateTicketState('Done', currentlyServingTicket.ticket_number);
             }
     
-            // Set the selected ticket to 'Serving'
             updatedTickets = updatedTickets.map(ticket =>
                 ticket.ticket_number === ticketNumber ? { ...ticket, state: 'Serving' } : ticket
             );
     
             const ticketBeingServed = updatedTickets.find(ticket => ticket.ticket_number === ticketNumber);
             if (ticketBeingServed) {
-                speakText(`Now serving ticket number ${ticketNumber} at station number 1.`);
+                speakText(`Ticket number ${ticketNumber} at station number 1.`);
             }
         } else {
-          
             updatedTickets = updatedTickets.map(ticket => {
                 if (ticket.ticket_number === ticketNumber) {
                     return { ...ticket, state: action };
@@ -142,59 +120,11 @@ window.speechSynthesis.onvoiceschanged = () => {
                 return ticket;
             });
         }
-             if (action === 'Cancel') {
-            const ticketToCancel = updatedTickets.find(ticket => ticket.ticket_number === ticketNumber);
-            if (ticketToCancel && ticketToCancel.state === 'Serving') {
-                const result = await Swal.fire({
-                    title: 'Cancel Ticket',
-                    text: 'Select a reason for not attending the customer:',
-                    input: 'select',
-                    inputOptions: {
-                        'no-show': 'Customer No-Show',
-                        'closed': 'Service Closed',
-                        'other': 'Other'
-                    },
-                    inputPlaceholder: 'Select a reason',
-                    showCancelButton: true
-                });
 
-                if (!result.isConfirmed) {
-                    return; 
-                }
- 
-            }
-        }
-
-        if (action === 'in Queue') {
-            // Remove the ticket from its current position
-            updatedTickets = updatedTickets.filter(ticket => ticket.ticket_number !== ticketNumber);
-            // Add it back to the start of the queue with state 'in Queue'
-            updatedTickets.unshift({ ...tickets.find(ticket => ticket.ticket_number === ticketNumber), state: 'in Queue' });
-        } else if (action === 'Serving') {
-            // Find and move the currently serving ticket to 'Done', if any
-            updatedTickets = updatedTickets.map(ticket => 
-                ticket.state === 'Serving' ? { ...ticket, state: 'Done' } : ticket
-            );
-            // Set the selected ticket to 'Serving'
-            updatedTickets = updatedTickets.map(ticket => 
-                ticket.ticket_number === ticketNumber ? { ...ticket, state: 'Serving' } : ticket
-            );
-        } else {
-            // Handle other actions (Cancel, Done)
-            updatedTickets = updatedTickets.map(ticket => {
-                if (ticket.ticket_number === ticketNumber) {
-                    return { ...ticket, state: action };
-                }
-                return ticket;
-            });
-        }
         setTickets(updatedTickets);
         updateCounters();
         await updateTicketState(action, ticketNumber );
     };
-    
-
-    
 
     const updateTicketState = async (newState, ticketNumber) => {
         console.log('Updating ticket state:', newState, 'Ticket number:', ticketNumber);
@@ -206,10 +136,8 @@ window.speechSynthesis.onvoiceschanged = () => {
                 
             });
             console.log('Update response:', response);
-            return response.data;
         } catch (error) {
             console.error("Error updating ticket:", error);
-            throw error; // Rethrow the error to handle it further if needed
         }
     };
 
@@ -228,39 +156,36 @@ window.speechSynthesis.onvoiceschanged = () => {
         <>
             <div className="sign-out-container">
                 <div className='search-section'>
-                <input
-                    type="text"
-                    className="form-control mb-3"
-                    placeholder="Search ticket by number..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                />
-                {searchQuery && (
-                    <div className="list-group">
-                        {filteredTickets.map(ticket => (
-                            <button
-                                key={ticket.ticket_number}
-                                className="list-group-item list-group-item-action"
-                                onClick={() => handleTicketSelect(ticket)}
-                            >
-                                Ticket NO {ticket.ticketNumber}
-                            </button>
-                        ))}
-                    </div>
-                )}
+                    <input
+                        type="text"
+                        className="form-control mb-3"
+                        placeholder="Search ticket by number..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                    />
+                    {searchQuery && (
+                        <div className="list-group">
+                            {filteredTickets.map(ticket => (
+                                <button
+                                    key={ticket.ticket_number}
+                                    className="list-group-item list-group-item-action"
+                                    onClick={() => handleTicketSelect(ticket)}
+                                >
+                                    Ticket NO {ticket.ticketNumber}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
                 <div className='btn-section'>
                     <button className="btn btn-secondary" onClick={handleSignOut}>
                         Sign Out
                     </button>
                 </div>
-               
-                
             </div>
             <h3>Tickets Done: {doneCount}</h3>
 
             <div className='container-agent mt-4'>
-                
                 {['in Queue', 'Serving', 'Done', 'Cancel'].map((section) => (
                     <div key={section} className="section mb-3 lane">
                         <h2>{section}</h2>
