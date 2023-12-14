@@ -28,7 +28,9 @@ async function login(user){
         username: dynamoUser.username,
         name: dynamoUser.name,
         option: dynamoUser.option,
-        station: dynamoUser.station
+        station: dynamoUser.station,
+        user: dynamoUser.userRole
+
     }
     const token =auth.generateToken(userInfo)
     const response = {user:userInfo, token:token}
