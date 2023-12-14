@@ -12,7 +12,7 @@ function Dashboard() {
       <SidePanel /> 
       <div className="dashboard">
         <div className="dashboard-header">
-          Welcome back {user.name}
+          Welcome back {user.name} at station {user.station}
         </div>
         <div className="dashboard-cards">
           <Card title="Tickets Done" number={5} />
@@ -20,13 +20,13 @@ function Dashboard() {
           <Card title="All Tickets" number={5} />
         </div>
       </div>
-      <div class='dashboard-info'>
-      <div class="profile">
+      <div className='dashboard-info'>
+      <div className="profile">
         <img src="/src/assets/img/Gauteng_dltc.jpeg" alt="Profile Avatar" /> 
-        <span class="status online"></span> 
+        <span className="status online"></span> 
       </div>
-      <button class="settings">Settings</button>
-      <button class="logout">Logout</button>
+      <button className="settings">Settings</button>
+      <button className="logout">Logout</button>
     </div>
 
       
