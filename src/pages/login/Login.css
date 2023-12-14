@@ -1,20 +1,22 @@
-.registration-form{
-	padding: 50px 0;
+.registration-form {
+    background-color: #e0e5ec; /* Neumorphic designs often use soft, light colors */
+    width: 100dvw;
+    height: 100dvh;
 }
 
-.registration-form form{
-    background-color: #fff;
+.registration-form form {
+    background-color: #e0e5ec;
     max-width: 600px;
     margin: auto;
     padding: 50px 70px;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
+    border-radius: 30px;
+    /* Soft inner and outer shadows for a 'pushed' effect */
+    box-shadow: 8px 8px 15px #a3b1c6, -8px -8px 15px #ffffff;
 }
 
-.registration-form .form-icon{
-	text-align: center;
-    background-color: #5891ff;
+.registration-form .form-icon {
+    text-align: center;
+    background-color: #5891ff; /* Keep this color for a pop of color */
     border-radius: 50%;
     font-size: 40px;
     color: white;
@@ -23,15 +25,21 @@
     margin: auto;
     margin-bottom: 50px;
     line-height: 100px;
+    /* Subtle shadow */
+    box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
 }
 
-.registration-form .item{
-	border-radius: 20px;
+.registration-form .item {
+    border-radius: 20px;
     margin-bottom: 25px;
     padding: 10px 20px;
+    background-color: #e0e5ec;
+    border: none;
+    /* Soft inset shadow for a 'sunken' effect */
+    box-shadow: inset 6px 6px 10px #a3b1c6, inset -6px -6px 10px #ffffff;
 }
 
-.registration-form .create-account{
+.registration-form .create-account {
     border-radius: 30px;
     padding: 10px 20px;
     font-size: 18px;
@@ -40,51 +48,18 @@
     border: none;
     color: white;
     margin-top: 20px;
+    /* Soft shadow */
+    box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
 }
 
-.registration-form .social-media{
-    max-width: 600px;
-    background-color: #fff;
-    margin: auto;
-    padding: 35px 0;
-    text-align: center;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    color: #9fadca;
-    border-top: 1px solid #dee9ff;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
-}
-
-.registration-form .social-icons{
-    margin-top: 30px;
-    margin-bottom: 16px;
-}
-
-.registration-form .social-icons a{
-    font-size: 23px;
-    margin: 0 3px;
-    color: #5691ff;
-    border: 1px solid;
-    border-radius: 50%;
-    width: 45px;
-    display: inline-block;
-    height: 45px;
-    text-align: center;
-    background-color: #fff;
-    line-height: 45px;
-}
-
-.registration-form .social-icons a:hover{
-    text-decoration: none;
-    opacity: 0.6;
-}
+/* ...rest of your CSS... */
 
 @media (max-width: 576px) {
-    .registration-form form{
+    .registration-form form {
         padding: 50px 20px;
     }
 
-    .registration-form .form-icon{
+    .registration-form .form-icon {
         width: 70px;
         height: 70px;
         font-size: 30px;

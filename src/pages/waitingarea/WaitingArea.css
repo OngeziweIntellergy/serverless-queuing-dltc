@@ -40,7 +40,7 @@
   box-shadow: -5px -5px 10px #fff, 5px 5px 15px rgba(174, 174, 192, 0.4);
 }
 
-.ticket-number {
+.ticket-numbering {
   font-size: 400px; /* Adjusted for better readability */
   color: #004990; 
   margin: 0;

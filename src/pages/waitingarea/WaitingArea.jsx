@@ -28,7 +28,7 @@ function WaitingArea() {
         <div className='waiting-area-left'>
             {currentTicket && (
               <>
-                <p className='ticket-number'>{currentTicket.ticket_number}</p>
+                <p className='ticket-numbering'>{currentTicket.ticket_number}</p>
                 <p className='service-station'>is now being served at Station: <span className='text-color'>{currentTicket.station}</span></p>
               </>
             )}
