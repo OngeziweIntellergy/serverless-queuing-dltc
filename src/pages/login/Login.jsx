@@ -104,7 +104,7 @@ function Login() {
       if (result.isConfirmed) {
         setReason(result.value);
         console.log('Selected options:', result.value);
-        navigate('/user')
+        navigate('/dashboard')
         // Send data to your endpoint
         // Example: axios.post('your-endpoint', result.value)
       }

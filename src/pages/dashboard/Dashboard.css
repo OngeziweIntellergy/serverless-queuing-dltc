@@ -1,31 +1,108 @@
-/* Dashboard.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
 .dashboard-container {
+  margin: 0;
+  top: 0;
+  position: absolute;
   display: flex;
+  background-color: #e0e0e0; 
+  width: 100dvw;
+  height: 100dvh;
 }
 
 .side-panel {
-  width: 200px; /* Set the width for the side panel */
-  background-color: #87CEFA; /* Set a background color for the side panel */
-  color: gold; /* Set text color for the side panel */
-  height: 100vh; /* Full height */
+  width: 200px;
+  background-color: #004990;
+  color: white;
+  height: 99vh;
+  box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff; /* Neumorphic shadow */
 }
 
 .dashboard {
-  flex-grow: 1; /* Dashboard content will fill the rest of the horizontal space */
-  display: flex; /* Align children (header and cards) in a column */
-  flex-direction: column; /* Stack children vertically */
-  padding: 20px; /* Add padding for aesthetics */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 }
 
 .dashboard-header {
   font-size: 24px;
-  margin-bottom: 20px; /* Add space below the header */
+  margin-bottom: 20px;
+  color: #333;
+  text-shadow: 1px 1px 2px #ffffff, -1px -1px 2px #bebebe; /* Inset text shadow */
 }
 
 .dashboard-cards {
-  display: flex; /* Arrange card components in a row */
-  gap: 20px; /* Space between cards */
+  display: flex;
+  gap: 20px;
 }
 
-/* Continue with the rest of your dashboard styles */
-/* Add any additional styles for the card components if needed */
+.card {
+  background-color: #e0e0e0;
+  box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff; /* Neumorphic shadow for cards */
+  border-radius: 10px; /* Optional: rounded corners for cards */
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.card:hover {
+  box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff; /* Enhanced shadow for hover effect */
+  transform: translateY(-5px); /* Slight lift effect on hover */
+}
+.dashboard-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
+}
+
+.profile {
+  position: relative;
+  display: inline-block;
+}
+
+.profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border: 2px solid white;
+}
+
+.status.online {
+  background-color: green;
+}
+
+.status.offline {
+  background-color: red;
+}
+
+button {
+  background-color: #e0e0e0;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 4px 4px 8px #bebebe, -4px -4px 8px #ffffff;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+button:hover {
+  box-shadow: 2px 2px 4px #bebebe, -2px -2px 4px #ffffff;
+}

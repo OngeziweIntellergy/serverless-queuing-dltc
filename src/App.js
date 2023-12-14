@@ -1,17 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
+import Dashboard from './pages/dashboard/Dashboard';
 import Agent from './pages/agent/Agent';
 import Display from './pages/display/Display';
 import Reason from './pages/reason/Reason';
 import Ticket from './pages/ticket/Ticket';
 import Login from './pages/login/Login';
 import User from './pages/user/user';
-<<<<<<< HEAD
 import Register from './pages/register/Register';
 import WaitingArea from './pages/waitingarea/WaitingArea';
-=======
->>>>>>> 1ccb1931e79ded20b6e1a648859e48f1cfae30ba
+
 
 
 function App() {
@@ -27,9 +26,10 @@ function App() {
           <Route path="/ticket" element={<Ticket />} />
           <Route path="/register" element={<Register />} />
           <Route path="/waitingarea" element={<WaitingArea />} />
+          <Route path="/dashboard" element={<Dashboard />}/>
           <Route path="/user" element={<User />} />
           <Route path="*" element={<Display />} /> 
-          <Route path="/dashboard" element={<Dashboard />} />
+         
           
         </Routes>
       </div>

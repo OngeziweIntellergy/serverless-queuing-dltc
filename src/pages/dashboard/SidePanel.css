@@ -1,7 +1,7 @@
-/* SidePanel.css */
+
 .side-panel {
     width: 200px; /* Adjust width as necessary */
-    background-color: #87CEFA; /* Adjust color as necessary */
+    background-color: #004990; /* Adjust color as necessary */
     min-height: 100vh;
     padding: 10px;
   }
@@ -9,7 +9,14 @@
   .side-panel-item {
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #87CEFA; /* Adjust color as necessary */
+    background-color: #004990;  /* Adjust color as necessary */
     border-radius: 4px;
   }
+  .side-panel-item:hover {
+    color:#004990 ;
+    background-color: white;
+    cursor: pointer;
+
+  }
+
   

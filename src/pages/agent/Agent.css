@@ -1,25 +1,24 @@
 *{
     box-sizing: border-box;
+    margin: 0;
+    top: 0;
   }
-.container-agent{width: 100vdw;height: 100dvh; display: flex;justify-content: space-between;}
-
-/* .section{width: 33%; height: 100%; display: flex; flex-direction: column; border-right: 1px solid blue;} */
+.container-agent{width: 99vdw;height: 90dvh; display: flex;justify-content: space-between;top: 0;margin-top: 0;}
 .lane {
-    width: 100%;
-    min-height: 200px; /* Adjust as needed */
+    width: 90%;
     margin-bottom: 15px;
-    border: 1px solid #ddd; /* Optional: adds a border for better visibility */
+    border: 1px solid #ddd; 
     padding: 10px;
 }
 
 .sign-out-container {
-    margin-top: 0;
     text-align: right; 
     padding: 1rem;
     display: flex;
     justify-content: space-evenly;
-    /* border:2px solid green; */
-    height:100px
+    height:10dvh;
+    width: 100dvw;
+    position: absolute;
 }
 .section {
     border: 1px solid #ddd;
