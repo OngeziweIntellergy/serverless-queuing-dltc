@@ -35,8 +35,10 @@ function WaitingArea() {
         </div>
         <div className='waiting-area-right'>
             <h2>Upcoming Tickets</h2>
-            {upcomingTickets.map((ticket, index) => (
-              <div key={index} className='waiting-ticket-side'> <p>{ticket.ticket_number}</p> </div>
+            {upcomingTickets.slice(0, 3).map((ticket, index) => (
+              <div key={index} className='waiting-ticket-side'>
+                <p>{ticket.ticket_number}</p>
+              </div>
             ))}
         </div>
     </div>

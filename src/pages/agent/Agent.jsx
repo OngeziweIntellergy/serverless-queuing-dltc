@@ -2,13 +2,23 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from "react-router-dom";
+import { resetUserSession } from '../../service/AuthService';
 import "./Agent.css";
 
+
 function Agent() {
+    const navigate = useNavigate();
     const [tickets, setTickets] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [servedCount, setServedCount] = useState(0);
     const [doneCount, setDoneCount] = useState(0);
+    const handleLogout=()=>{
+        resetUserSession();
+        showLoading()
+        navigate('/login')
+
+    }
 
     // Text-to-Speech Function with Female Voice
     const speakText = (text) => {
@@ -77,6 +87,27 @@ function Agent() {
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
+    const showLoading = function() {
+        Swal.fire({
+          title: 'Now loading',
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          timer: 2000,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        }).then((result) => {
+          if (result.dismiss === Swal.DismissReason.timer) {
+            console.log('closed by timer!!!!');
+            Swal.fire({ 
+              title: 'Finished!',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          }
+        });
+      };
 
     const handleTicketSelect = (ticket) => {
         Swal.fire({
@@ -87,9 +118,7 @@ function Agent() {
         });
     };
 
-    const handleSignOut = () => {
-        window.location.href = 'https://frontend.d17g06z7kjqaor.amplifyapp.com/login';
-    };
+   
 
     const handleAction = async (ticketNumber, action) => {
         let updatedTickets = [...tickets];
@@ -178,7 +207,7 @@ function Agent() {
                     )}
                 </div>
                 <div className='btn-section'>
-                    <button className="btn btn-secondary" onClick={handleSignOut}>
+                    <button className="btn btn-secondary" onClick={handleLogout}>
                         Sign Out
                     </button>
                 </div>

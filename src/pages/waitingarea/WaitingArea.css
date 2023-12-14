@@ -6,8 +6,8 @@
 .waiting-area {
   display: flex;
   top: 0;
-  width: 100dvw;
-  height: 100dvh;
+  width: 99dvw;
+  height: 99dvh;
   display: flex;
   position: absolute;
   background: #f0f0f3; /* Soft background */

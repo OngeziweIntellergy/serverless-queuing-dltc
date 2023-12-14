@@ -24,6 +24,27 @@ function Login() {
     document.getElementById('Motor_Vehicle_License').checked = checked;
     document.getElementById('Operating_License').checked = checked;
   };
+  const showLoading = function() {
+    Swal.fire({
+      title: 'Now loading',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      timer: 2000,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log('closed by timer!!!!');
+        Swal.fire({ 
+          title: 'Finished!',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }
+    });
+  };
   const submitHandler =(e)=>{
     e.preventDefault();
     let loginUrl = "https://hps0z6b4xb.execute-api.us-east-1.amazonaws.com/prod/login";
@@ -36,19 +57,38 @@ function Login() {
       username:username,
       password:password,  
     }
-  
-    axios.post(loginUrl, requestBody, requestConfig).then(response=>{
-      setUserSession(response.data.user, response.data.token)
-      showOptions();
-      console.log(response)}).catch(error=>{
-        console.log(error)
-        // if(error.response.status){
-        //   console.log(error.response.data.message)
-        // }else{
-        //   console.log("server error.")
-        // }
+    showLoading()
+    axios.post(loginUrl, requestBody, requestConfig)
+    .then(response => {
+      Swal.close();
+      if (response.status === 200) {
+        const userRole = response.data.user.user;
+        if (userRole === 'admin') {
+          setUserSession(response.data.user, response.data.token);
+          showOptions();
+        } else if (userRole === 'Sadmin') {
+          setUserSession(response.data.user, response.data.token);
 
+          navigate('/dashboard')
+
+          // Navigate to dashboard
+          // For example, using React Router: history.push('/dashboard');
+        }
+      }
+
+      console.log(response);
     })
+    .catch(error => {
+      // Hide SweetAlert Loader
+      Swal.close();
+
+      if (error.response && error.response.status) {
+        Swal.fire('Error', error.response.data.message, 'error');
+      } else {
+        Swal.fire('Error', 'Server error.', 'error');
+      }
+      console.log(error);
+    });
   }
 
 
@@ -80,8 +120,6 @@ function Login() {
             <input type="checkbox" id="Operating_License">
             Operating License
           </label><br>
-
-          
         </div>
       `,
       didOpen: () => {
@@ -104,7 +142,7 @@ function Login() {
       if (result.isConfirmed) {
         setReason(result.value);
         console.log('Selected options:', result.value);
-        navigate('/dashboard')
+        navigate('/agent')
         // Send data to your endpoint
         // Example: axios.post('your-endpoint', result.value)
       }
