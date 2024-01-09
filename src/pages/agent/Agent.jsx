@@ -73,7 +73,7 @@ function Agent() {
         };
 
         fetchData();
-    }, []);
+    }, [tickets]);
 
     useEffect(() => {
         updateCounters();

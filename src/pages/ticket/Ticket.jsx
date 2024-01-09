@@ -163,7 +163,7 @@ const calculateNumberInQueue = useCallback(async (dateTime, option) => {
   const queueMessage = () => {
     if (numberInQueue === 1) {
       console.log(numberInQueue)
-      return "Move closer, you're next in line!";
+      return "Move closer, you're first in line";
     } else if (numberInQueue === 2) {
       console.log(numberInQueue)
 
