@@ -21,7 +21,7 @@ function WaitingArea() {
     };
 
     fetchData();
-  }, []);
+  }, [currentTicket, upcomingTickets]);
 
   return (
     <div className="waiting-area">
