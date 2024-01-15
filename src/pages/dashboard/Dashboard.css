@@ -1,108 +1,227 @@
-* {
-  box-sizing: border-box;
+body {
   margin: 0;
+  padding: 0;
+  background-color: #1d2634;
+  color: #9e9ea4;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.dashboard-container {
-  margin: 0;
-  top: 0;
+.icon {
+  vertical-align: middle;
+  line-height: 1px;
+  font-size: 20px;
+}
+.icon_header {
+  vertical-align: middle;
+  line-height: 1px;
+  font-size: 26px;
+}
+.icon, .icon_header {
+  margin-right: 5px;
+}
+
+.close_icon {
+  color: red;
+  margin-left: 30px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 260px 1fr 1fr 1fr;
+  grid-template-rows: 0.2fr 3fr;
+  grid-template-areas:
+    'sidebar header header header'
+    'sidebar main main main';
+  height: 100vh;
+}
+
+/* Header  */
+.header {
+  grid-area: header;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px 0 30px;
+  box-shadow: 0 6px 7px -3px rgba(0, 0, 0, 0.35);
+}
+
+.menu-icon {
+  display: none;
+}
+/* End Header  */
+
+/* Sidebar  */
+#sidebar {
+  grid-area: sidebar;
+  height: 100%;
+  background-color: #263043;
+  overflow-y: auto;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+.sidebar-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px 0px 30px;
+  margin-bottom: 30px;
+}
+
+.sidebar-title > span {
+  display: none;
+}
+
+.sidebar-brand {
+  margin-top: 15px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.sidebar-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.sidebar-list-item {
+  padding: 20px 20px 20px 20px;
+  font-size: 18px;
+}
+
+.sidebar-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.sidebar-list-item > a {
+  text-decoration: none;
+  color: #9e9ea4;
+}
+
+.sidebar-responsive {
+  display: inline !important;
   position: absolute;
+  /*
+    we want the z-index of the sidebar higher so that
+    the charts are not showing over the sidebar 
+    on small screens
+  */
+  z-index: 12 !important;
+}
+
+/* End Sidebar  */
+
+
+/* Main  */  
+.main-container {
+  grid-area: main;
+  overflow-y: auto;
+  padding: 20px 20px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.main-title {
   display: flex;
-  background-color: #e0e0e0; 
-  width: 100dvw;
-  height: 100dvh;
+  justify-content: space-between;
 }
 
-.side-panel {
-  width: 200px;
-  background-color: #004990;
-  color: white;
-  height: 99vh;
-  box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff; /* Neumorphic shadow */
-}
-
-.dashboard {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-}
-
-.dashboard-header {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-  text-shadow: 1px 1px 2px #ffffff, -1px -1px 2px #bebebe; /* Inset text shadow */
-}
-
-.dashboard-cards {
-  display: flex;
+.main-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 20px;
+  margin: 15px 0;
 }
 
 .card {
-  background-color: #e0e0e0;
-  box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff; /* Neumorphic shadow for cards */
-  border-radius: 10px; /* Optional: rounded corners for cards */
-  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 8px 15px;
+  border-radius: 5px;
 }
 
-.card:hover {
-  box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff; /* Enhanced shadow for hover effect */
-  transform: translateY(-5px); /* Slight lift effect on hover */
+.card:first-child {
+  background-color: #2962ff;
 }
-.dashboard-info {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
+
+.card:nth-child(2) {
+  background-color: #ff6d00;
+}
+
+.card:nth-child(3) {
+  background-color: #2e7d32;
+}
+
+.card:nth-child(4) {
+  background-color: #d50000;
+}
+
+.card-inner {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background-color: #e0e0e0;
-  border-radius: 10px;
-  box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
+  justify-content: space-between;
 }
 
-.profile {
-  position: relative;
-  display: inline-block;
+.card-inner > .card_icon {
+  font-size: 25px;
 }
 
-.profile img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid white;
+.charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 60px;
+  height: 300px;
 }
 
-.status {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  border: 2px solid white;
+/* End Main  */
+
+
+/* Medium <= 992px */
+  
+@media screen and (max-width: 992px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.2fr 3fr;
+    grid-template-areas:
+      'header'
+      'main';
+  }
+
+  #sidebar {
+    display: none;
+  }
+
+  .menu-icon {
+    display: inline;
+  }
+
+  .sidebar-title > span {
+    display: inline;
+  }
+}
+/* Small <= 768px */
+  
+@media screen and (max-width: 768px) {
+  .main-cards {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .charts {
+    grid-template-columns: 1fr;
+    margin-top: 30px;
+  }
 }
 
-.status.online {
-  background-color: green;
-}
+/* Extra Small <= 576px */
 
-.status.offline {
-  background-color: red;
-}
-
-button {
-  background-color: #e0e0e0;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  box-shadow: 4px 4px 8px #bebebe, -4px -4px 8px #ffffff;
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
-}
-
-button:hover {
-  box-shadow: 2px 2px 4px #bebebe, -2px -2px 4px #ffffff;
+@media screen and (max-width: 576px) {
+  .hedaer-left {
+    display: none;
+  }
 }
