@@ -9,19 +9,19 @@ const dynamodb =new AWS.DynamoDB.DocumentClient();
 const userTable = "examiners";
 
 async function login(user){
-    const username = user.username;
+    const username = user.email;
     const password = user.password;
-    if(!user || !username || !password){
+    if(!user || !email || !password){
         return util.buildResponse(401, {
             message: 'Username & Password are required'
         })
     }
     const dynamoUser = await getUser(username.toLowerCase().trim());
     if(!dynamoUser || !dynamoUser.username){
-        return util.buildResponse(403, {message: 'user does not exist'})
+        return util.buildResponse(403, {message: 'Password/Email is incorrect'})
     }
     if(!bcrypt.compareSync(password,dynamoUser.password)){
-        return util.buildResponse(403, {message:'password is incorrect'})
+        return util.buildResponse(403, {message:'Password/Email is incorrect'})
 
     }
     const userInfo ={
