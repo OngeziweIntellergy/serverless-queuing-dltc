@@ -10,25 +10,25 @@ const userTable = "examiners";
 async function register(userInfo) {
     const { name, email, username, station,option, userRole, password } = userInfo;
 
-    if (!username || !name || !password) {
+    if (!username || !email || !password) {
         return util.buildResponse(400, {
             message: 'All fields are required'
         });
     }
 
     try {
-        const dynamoUser = await getUser(username.toLowerCase().trim());
+        const dynamoUser = await getUser(email.toLowerCase().trim());
         if (dynamoUser) {
             return util.buildResponse(400, {
-                message: 'Username already exists, please use a different username'
+                message: 'Email already exists, please use a different Email address'
             });
         }
 
         const encryptedPw = bcrypt.hashSync(password.trim(), 10);
         const user = {
             name,
-            email,
-            username: username.toLowerCase().trim(),
+            email :email.toLowerCase().trim(),
+            username,
             station,
             option,
             userRole,
@@ -47,10 +47,10 @@ async function register(userInfo) {
     }
 }
 
-async function getUser(username) {
+async function getUser(email) {
     const params = {
         TableName: userTable,
-        Key: { username }
+        Key: { email }
     };
     try {
         const response = await dynamodb.get(params).promise();

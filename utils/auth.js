@@ -10,7 +10,7 @@ function generateToken(userInfo){
     })
 }
 
-function verifyToken(username, token){
+function verifyToken(email, token){
     return jwt.verify(token, process.env.JWT_SECRET, (error, response)=>{
         if(error){
             return{
@@ -18,7 +18,7 @@ function verifyToken(username, token){
                 message: 'invalid token'
             }
         }
-        if(response.username !==username){
+        if(response.email !==email){
             return{
                 verified:false,
                 message: 'invalid user'

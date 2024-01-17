@@ -2,7 +2,7 @@ const util = require('../utils/utils');
 const auth = require('../utils/auth');
 
 function verify(requestBody) {
-    if (!requestBody.user || !requestBody.user.username || !requestBody.token) {
+    if (!requestBody.user || !requestBody.user.email || !requestBody.token) {
         return util.buildResponse(401, {
             verified: false,
             message: 'Incorrect request body'
@@ -10,9 +10,9 @@ function verify(requestBody) {
     }
 
     try {
-        const user = requestBody.user;
+        const user = requestBody.email;
         const token = requestBody.token;
-        const verification = auth.verifyToken(user.username, token);
+        const verification = auth.verifyToken(user.email, token);
 
         if (!verification.verified) {
             return util.buildResponse(401, verification);

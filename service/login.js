@@ -38,10 +38,10 @@ async function login(user){
        
 }
 
-async function getUser(username){
+async function getUser(email){
     const params = {
         TableName:userTable,
-        Key: {username:username}
+        Key: {email:email}
     }
     return await dynamodb.get(params).promise().then(response=>{
         return response.Item;
